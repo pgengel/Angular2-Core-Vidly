@@ -8,9 +8,10 @@ using Angular2_Core_Vidly.Persistence;
 namespace Vidly.Migrations
 {
     [DbContext(typeof(VidlyDbContext))]
-    partial class VidlyDbContextModelSnapshot : ModelSnapshot
+    [Migration("20170515213133_PopulateMembershipTypes")]
+    partial class PopulateMembershipTypes
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.1.2")
@@ -23,9 +24,7 @@ namespace Vidly.Migrations
 
                     b.Property<int>("MembershipTypeId");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(255);
+                    b.Property<string>("Name");
 
                     b.Property<bool>("isSubscribedToNewsLetter");
 

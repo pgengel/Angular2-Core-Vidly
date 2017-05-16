@@ -9,6 +9,7 @@ namespace Angular2_Core_Vidly.Persistence
         public DbSet<CustomerDbModel> Customer { get; set; }
         public DbSet<MembershipTypeDbModel> MembershipType { get; set; }
         public DbSet<MovieDbModel> Movie { get; set; }
+        public DbSet<GenreDbModel> Genre { get; set; }
         
         //In start-Up, services.AddDbContext<VidlyDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("Default"))); //add using Microsoft.EntityFrameworkCore;
         public VidlyDbContext(DbContextOptions<VidlyDbContext> options): base(options) 

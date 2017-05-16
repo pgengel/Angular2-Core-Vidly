@@ -1,7 +1,16 @@
+using Angular2_Core_Vidly.Controllers.ApiModels;
+using Angular2_Core_Vidly.Core.DbModels;
+using AutoMapper;
+
 namespace Angular2_Core_Vidly.Mapping
 {
-    public class MappingProfile
+    public class MappingProfile : Profile
     {
-        
+        public MappingProfile()
+        {
+            CreateMap<CustomerDbModel, CustomerApiModel>();
+            CreateMap<MovieDbModel, MovieApiModel>();
+            CreateMap<MembershipTypeDbModel, MembershipTypeApiModel>();
+        }
     }
 }

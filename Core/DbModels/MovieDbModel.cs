@@ -1,3 +1,4 @@
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -11,5 +12,17 @@ namespace Angular2_Core_Vidly.Core.DbModels
         [Required]
         [StringLength(255)]
         public string Name { get; set; }
+        public GenreDbModel Genre {get; set;}
+        public int GenreId {get; set;}
+        public DateTime DateAdded { get; set; }
+
+        [Display(Name = "Release Date")]
+        public DateTime ReleaseDate { get; set; }
+
+        [Display(Name = "Number in Stock")]
+        [Range(1, 20)]
+        public byte NumberInStock { get; set; }
+
+        public byte NumberAvailable { get; set; }
     }
 }

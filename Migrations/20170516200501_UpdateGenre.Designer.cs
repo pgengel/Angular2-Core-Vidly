@@ -8,8 +8,8 @@ using Angular2_Core_Vidly.Persistence;
 namespace Vidly.Migrations
 {
     [DbContext(typeof(VidlyDbContext))]
-    [Migration("20170515211604_InitialModels")]
-    partial class InitialModels
+    [Migration("20170516200501_UpdateGenre")]
+    partial class UpdateGenre
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -22,9 +22,13 @@ namespace Vidly.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<DateTime?>("Birthdate");
+
                     b.Property<int>("MembershipTypeId");
 
-                    b.Property<string>("Name");
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(255);
 
                     b.Property<bool>("isSubscribedToNewsLetter");
 
@@ -33,6 +37,20 @@ namespace Vidly.Migrations
                     b.HasIndex("MembershipTypeId");
 
                     b.ToTable("tb_Customer");
+                });
+
+            modelBuilder.Entity("Angular2_Core_Vidly.Core.DbModels.GenreDbModel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(255);
+
+                    b.HasKey("Id");
+
+                    b.ToTable("tb_Genre");
                 });
 
             modelBuilder.Entity("Angular2_Core_Vidly.Core.DbModels.MembershipTypeDbModel", b =>
@@ -59,11 +77,23 @@ namespace Vidly.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<DateTime>("DateAdded");
+
+                    b.Property<int>("GenreId");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(255);
 
+                    b.Property<byte>("NumberAvailable");
+
+                    b.Property<byte>("NumberInStock");
+
+                    b.Property<DateTime>("ReleaseDate");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("GenreId");
 
                     b.ToTable("tb_Movie");
                 });
@@ -73,6 +103,14 @@ namespace Vidly.Migrations
                     b.HasOne("Angular2_Core_Vidly.Core.DbModels.MembershipTypeDbModel", "MembershipType")
                         .WithMany()
                         .HasForeignKey("MembershipTypeId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Angular2_Core_Vidly.Core.DbModels.MovieDbModel", b =>
+                {
+                    b.HasOne("Angular2_Core_Vidly.Core.DbModels.GenreDbModel", "Genre")
+                        .WithMany()
+                        .HasForeignKey("GenreId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
         }

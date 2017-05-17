@@ -1,3 +1,6 @@
+import { CustomerService } from './services/customer.service';
+import { MovieService } from './services/movie.service';
+import { RentalService } from './services/rental.service';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { UniversalModule } from 'angular2-universal';
@@ -40,7 +43,11 @@ import { RentalFormComponent } from './components/rental-form/rental-form.compon
             { path: 'rentals/new', component: RentalFormComponent },
             { path: '**', redirectTo: 'home' }
         ])
-    ]
+    ],
+    providers: [
+        CustomerService,
+        MovieService,
+        RentalService]   
 })
 export class AppModule {
 }

@@ -10,6 +10,7 @@ import { Component, OnInit } from '@angular/core';
 export class CustomerFormComponent implements OnInit {
   private membershipType : any[];
   private typeOfMembership : any = {};
+  private isSubscribed : boolean = false; 
 
   constructor(private membershipTypeService: MembershipTypeService) { }
 

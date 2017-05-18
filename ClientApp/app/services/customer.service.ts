@@ -8,7 +8,7 @@ export class CustomerService {
   constructor(private http: Http) { }
 
   getCustomers(){
-    return this.http.get('/api/customer')
+    return this.http.get('/api/customers')
       .map(res => res.json());
   }
 }

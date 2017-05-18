@@ -22,17 +22,17 @@ namespace Angular2_Core_Vidly.Controllers
 
         }
 
-        [HttpGet("/api/customer")]
+        [HttpGet("/api/customers")]
         public async Task<ActionResult> GetCustomers()
         {
             var customersDb = await this.context.Customer.ToListAsync();
             if(customersDb == null)
                 return NotFound();
             var customersApi = mapper.Map<List<CustomerDbModel>, List<CustomerApiModel>>(customersDb);
-            return Ok(customersApi);
+            return Ok(customersDb);
         }
 
-        [HttpGet("/api/customer/new")]
+        [HttpGet("/api/customers/new")]
         public async Task<IActionResult> getMembershipType()
         {
             var membershipTypeDb = await this.context.MembershipType.ToListAsync();

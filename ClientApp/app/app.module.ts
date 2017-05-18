@@ -1,3 +1,5 @@
+import {FormsModule} from '@angular/forms';
+import { MembershipTypeService } from './services/membership-type.service';
 import { CustomerService } from './services/customer.service';
 import { MovieService } from './services/movie.service';
 import { RentalService } from './services/rental.service';
@@ -30,6 +32,7 @@ import { RentalFormComponent } from './components/rental-form/rental-form.compon
         RentalFormComponent
     ],
     imports: [
+        FormsModule,
         UniversalModule, // Must be first import. This automatically imports BrowserModule, HttpModule, and JsonpModule too.
         RouterModule.forRoot([
             { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -47,7 +50,8 @@ import { RentalFormComponent } from './components/rental-form/rental-form.compon
     providers: [
         CustomerService,
         MovieService,
-        RentalService]   
+        RentalService,
+        MembershipTypeService]   
 })
 export class AppModule {
 }

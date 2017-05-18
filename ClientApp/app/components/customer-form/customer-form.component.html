@@ -1,4 +1,7 @@
 <h1>New Customer</h1>
+<p>{{ membershipType | json }}</p>
+<p>{{ typeOfMembership | json }}</p>
+
 <form>
   <div class="form-group">
     <label for="name">Customer</label>
@@ -6,9 +9,9 @@
   </div>
   <div class="form-group">
     <label for="membershiptype">Membershiptype</label>
-    <select class="form-control" id="membershiptype" placeholder="Membershiptype">
+    <select  class="form-control" id="membershiptype" placeholder="Membershiptype" (change)="onMembershipTypeSelect()" [(ngModel)]="typeOfMembership.id" name="membershipType">
       <option value=""></option>
-      <option value="">Membershiptype</option>
+      <option *ngFor="let m of membershipType" value="{{m.id}}">{{m.name}}</option>
     </select>
   </div>
   <div class="checkbox">

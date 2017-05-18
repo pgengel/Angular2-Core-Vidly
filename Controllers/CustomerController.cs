@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Angular2_Core_Vidly.Controllers
 {
-    [Route("/api/customer")]
+    //[Route("/api/customer")]
     public class CustomerController : Controller
     {
         private readonly VidlyDbContext context;
@@ -22,7 +22,7 @@ namespace Angular2_Core_Vidly.Controllers
 
         }
 
-        [HttpGet]
+        [HttpGet("/api/customer")]
         public async Task<ActionResult> GetCustomers()
         {
             var customersDb = await this.context.Customer.ToListAsync();
@@ -30,6 +30,19 @@ namespace Angular2_Core_Vidly.Controllers
                 return NotFound();
             var customersApi = mapper.Map<List<CustomerDbModel>, List<CustomerApiModel>>(customersDb);
             return Ok(customersApi);
+        }
+
+        [HttpGet("/api/customer/new")]
+        public async Task<IActionResult> getMembershipType()
+        {
+            var membershipTypeDb = await this.context.MembershipType.ToListAsync();
+
+            if(membershipTypeDb == null)
+                return NotFound();
+
+            var membershipTypeApi = mapper.Map<List<MembershipTypeDbModel>, List<MembershipTypeApiModel>>(membershipTypeDb);
+
+            return Ok(membershipTypeDb);
         }
     }
 }

@@ -10,7 +10,7 @@ namespace Angular2_Core_Vidly.Mapping
         public MappingProfile()
         {
             CreateMap<List<CustomerDbModel>, List<CustomerApiModel>>();
-            CreateMap<MovieDbModel, MovieApiModel>();
+            CreateMap<List<MovieDbModel>, List<MovieApiModel>>();
             CreateMap<List<MembershipTypeDbModel>, List<MembershipTypeApiModel>>();
 
         }

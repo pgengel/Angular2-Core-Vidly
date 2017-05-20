@@ -8,7 +8,7 @@ export class MovieService {
   constructor(private http: Http) { }
 
   getMovies(){
-    this.http.get('/api/movies')
+    return this.http.get('/api/movies')
       .map(res => res.json());
   }
 }

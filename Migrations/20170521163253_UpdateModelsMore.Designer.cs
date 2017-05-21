@@ -8,8 +8,8 @@ using Angular2_Core_Vidly.Persistence;
 namespace Vidly.Migrations
 {
     [DbContext(typeof(VidlyDbContext))]
-    [Migration("20170521064500_UpdateAllModels")]
-    partial class UpdateAllModels
+    [Migration("20170521163253_UpdateModelsMore")]
+    partial class UpdateModelsMore
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

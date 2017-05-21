@@ -5,12 +5,12 @@ using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace Vidly.Migrations
 {
-    public partial class Initial : Migration
+    public partial class UpdateModelsMore : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Genre",
+                name: "tb_Genre",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -19,7 +19,7 @@ namespace Vidly.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Genre", x => x.Id);
+                    table.PrimaryKey("PK_tb_Genre", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -28,10 +28,10 @@ namespace Vidly.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    DiscountRate = table.Column<byte>(nullable: false),
-                    DurationInMonths = table.Column<byte>(nullable: false),
+                    DiscountRate = table.Column<int>(nullable: false),
+                    DurationInMonths = table.Column<int>(nullable: false),
                     Name = table.Column<string>(nullable: false),
-                    SignUpFee = table.Column<short>(nullable: false)
+                    SignUpFee = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -47,17 +47,17 @@ namespace Vidly.Migrations
                     DateAdded = table.Column<DateTime>(nullable: false),
                     GenreId = table.Column<int>(nullable: false),
                     Name = table.Column<string>(maxLength: 255, nullable: false),
-                    NumberAvailable = table.Column<byte>(nullable: false),
-                    NumberInStock = table.Column<byte>(nullable: false),
+                    NumberAvailable = table.Column<int>(nullable: false),
+                    NumberInStock = table.Column<int>(nullable: false),
                     ReleaseDate = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_tb_Movie", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_tb_Movie_Genre_GenreId",
+                        name: "FK_tb_Movie_tb_Genre_GenreId",
                         column: x => x.GenreId,
-                        principalTable: "Genre",
+                        principalTable: "tb_Genre",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -68,7 +68,7 @@ namespace Vidly.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    Birthdate = table.Column<DateTime>(nullable: true),
+                    Birthday = table.Column<DateTime>(nullable: true),
                     MembershipTypeId = table.Column<int>(nullable: false),
                     Name = table.Column<string>(maxLength: 255, nullable: false),
                     isSubscribedToNewsLetter = table.Column<bool>(nullable: false)
@@ -107,7 +107,7 @@ namespace Vidly.Migrations
                 name: "tb_MembershipType");
 
             migrationBuilder.DropTable(
-                name: "Genre");
+                name: "tb_Genre");
         }
     }
 }

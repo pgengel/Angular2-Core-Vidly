@@ -8,9 +8,10 @@ using Angular2_Core_Vidly.Persistence;
 namespace Vidly.Migrations
 {
     [DbContext(typeof(VidlyDbContext))]
-    partial class VidlyDbContextModelSnapshot : ModelSnapshot
+    [Migration("20170521200000_AddedRentalsModels")]
+    partial class AddedRentalsModels
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.1.2")
@@ -90,31 +91,11 @@ namespace Vidly.Migrations
 
                     b.Property<DateTime>("ReleaseDate");
 
-                    b.Property<int?>("RentalDbModelId");
-
                     b.HasKey("Id");
 
                     b.HasIndex("GenreId");
 
-                    b.HasIndex("RentalDbModelId");
-
                     b.ToTable("tb_Movie");
-                });
-
-            modelBuilder.Entity("Vidly.Core.DbModels.RentalDbModel", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<int>("CustomerId");
-
-                    b.Property<int>("MovieId");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CustomerId");
-
-                    b.ToTable("tb_Rental");
                 });
 
             modelBuilder.Entity("Vidly.Core.DbModels.CustomerDbModel", b =>
@@ -130,18 +111,6 @@ namespace Vidly.Migrations
                     b.HasOne("Vidly.Core.DbModels.GenreDbModel", "Genre")
                         .WithMany()
                         .HasForeignKey("GenreId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("Vidly.Core.DbModels.RentalDbModel")
-                        .WithMany("Movies")
-                        .HasForeignKey("RentalDbModelId");
-                });
-
-            modelBuilder.Entity("Vidly.Core.DbModels.RentalDbModel", b =>
-                {
-                    b.HasOne("Vidly.Core.DbModels.CustomerDbModel", "Customer")
-                        .WithMany()
-                        .HasForeignKey("CustomerId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
         }

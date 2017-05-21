@@ -23,7 +23,7 @@ namespace Angular2_Core_Vidly.Controllers
         }
 
         [HttpGet("/api/customers")]
-        public async Task<ActionResult> GetCustomers()
+        public async Task<IActionResult> GetCustomers()
         {
             var customersDb = await this.context.Customer.ToListAsync();
             if(customersDb == null)

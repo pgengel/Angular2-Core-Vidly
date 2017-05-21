@@ -20,7 +20,7 @@ namespace Angular2_Core_Vidly.Controllers
         }
 
         [HttpGet("/api/movies")]
-        public async Task<ActionResult> GetMovies()
+        public async Task<IActionResult> GetMovies()
         {
             var moviesDb = await this.context.Movie.ToListAsync();
             
@@ -33,7 +33,7 @@ namespace Angular2_Core_Vidly.Controllers
         }
 
         [HttpGet("/api/genre")]
-        public async Task<ActionResult> GetGenre()
+        public async Task<IActionResult> GetGenre()
         {
             //GenreDbModel genreDb = this.context.Genre.SingleOrDefault(x => x.Id == 1);
             List<GenreDbModel> genreDb = await this.context.Genre.ToListAsync();

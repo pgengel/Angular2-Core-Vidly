@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using AutoMapper;
 using Vidly.Controllers.ApiModels;
 using Vidly.Core.DbModels;
+using System.Linq;
 
 namespace Angular2_Core_Vidly.Mapping
 {
@@ -9,18 +10,15 @@ namespace Angular2_Core_Vidly.Mapping
     {
         public MappingProfile()
         {
-            //CreateMap<List<CustomerDbModel>, List<CustomerApiModel>>();
+            //Domain to API
             CreateMap<CustomerDbModel, CustomerApiModel>();
-
-            //CreateMap<List<MovieDbModel>, List<MovieApiModel>>();
             CreateMap<MovieDbModel, MovieApiModel>();
-
-            //CreateMap<List<MembershipTypeDbModel>, List<MembershipTypeApiModel>>();
             CreateMap<MembershipTypeDbModel, MembershipTypeApiModel>();
-
-            //CreateMap<List<GenreDbModel>, List<GenreApiModel>>();
             CreateMap<GenreDbModel, GenreApiModel>();
 
+            //API to Domain
+            CreateMap<RentalApiModel, RentalDbModel>()
+                .ForMember(rdb => rdb.Movies, opt => opt.MapFrom(rapi => rapi.Movies.Select(id => new MovieDbModel { Id = id })));
 
         }
     }

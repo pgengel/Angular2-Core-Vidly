@@ -1,7 +1,7 @@
 using System.Collections.Generic;
-using Angular2_Core_Vidly.Controllers.ApiModels;
-using Angular2_Core_Vidly.Core.DbModels;
 using AutoMapper;
+using Vidly.Controllers.ApiModels;
+using Vidly.Core.DbModels;
 
 namespace Angular2_Core_Vidly.Mapping
 {
@@ -9,9 +9,18 @@ namespace Angular2_Core_Vidly.Mapping
     {
         public MappingProfile()
         {
-            CreateMap<List<CustomerDbModel>, List<CustomerApiModel>>();
-            CreateMap<List<MovieDbModel>, List<MovieApiModel>>();
-            CreateMap<List<MembershipTypeDbModel>, List<MembershipTypeApiModel>>();
+            //CreateMap<List<CustomerDbModel>, List<CustomerApiModel>>();
+            CreateMap<CustomerDbModel, CustomerApiModel>();
+
+            //CreateMap<List<MovieDbModel>, List<MovieApiModel>>();
+            CreateMap<MovieDbModel, MovieApiModel>();
+
+            //CreateMap<List<MembershipTypeDbModel>, List<MembershipTypeApiModel>>();
+            CreateMap<MembershipTypeDbModel, MembershipTypeApiModel>();
+
+            //CreateMap<List<GenreDbModel>, List<GenreApiModel>>();
+            CreateMap<GenreDbModel, GenreApiModel>();
+
 
         }
     }

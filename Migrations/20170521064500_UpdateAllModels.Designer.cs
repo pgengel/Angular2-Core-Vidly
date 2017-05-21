@@ -8,9 +8,10 @@ using Angular2_Core_Vidly.Persistence;
 namespace Vidly.Migrations
 {
     [DbContext(typeof(VidlyDbContext))]
-    partial class VidlyDbContextModelSnapshot : ModelSnapshot
+    [Migration("20170521064500_UpdateAllModels")]
+    partial class UpdateAllModels
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.1.2")
@@ -21,6 +22,8 @@ namespace Vidly.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<DateTime?>("Birthday");
+
                     b.Property<int>("MembershipTypeId");
 
                     b.Property<string>("Name")
@@ -30,6 +33,8 @@ namespace Vidly.Migrations
                     b.Property<bool>("isSubscribedToNewsLetter");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("MembershipTypeId");
 
                     b.ToTable("tb_Customer");
                 });
@@ -72,11 +77,41 @@ namespace Vidly.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("Name");
+                    b.Property<DateTime>("DateAdded");
+
+                    b.Property<int>("GenreId");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(255);
+
+                    b.Property<int>("NumberAvailable");
+
+                    b.Property<int>("NumberInStock");
+
+                    b.Property<DateTime>("ReleaseDate");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("GenreId");
+
                     b.ToTable("tb_Movie");
+                });
+
+            modelBuilder.Entity("Vidly.Core.DbModels.CustomerDbModel", b =>
+                {
+                    b.HasOne("Vidly.Core.DbModels.MembershipTypeDbModel", "MembershipType")
+                        .WithMany()
+                        .HasForeignKey("MembershipTypeId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Vidly.Core.DbModels.MovieDbModel", b =>
+                {
+                    b.HasOne("Vidly.Core.DbModels.GenreDbModel", "Genre")
+                        .WithMany()
+                        .HasForeignKey("GenreId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
         }
     }

@@ -1,11 +1,11 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Angular2_Core_Vidly.Controllers.ApiModels;
-using Angular2_Core_Vidly.Core.DbModels;
 using Angular2_Core_Vidly.Persistence;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Vidly.Core.DbModels;
+using Vidly.Controllers.ApiModels;
 
 namespace Angular2_Core_Vidly.Controllers
 {
@@ -27,9 +27,23 @@ namespace Angular2_Core_Vidly.Controllers
             if (moviesDb == null)
                 return NotFound();
 
-            var moviesApi = mapper.Map<List<MovieDbModel>, List<MovieApiModel>>(moviesDb);
+            var moviesApi = this.mapper.Map<List<MovieDbModel>, List<MovieApiModel>>(moviesDb);
 
-            return Ok(moviesDb);
+            return Ok(moviesApi);
+        }
+
+        [HttpGet("/api/genre")]
+        public async Task<ActionResult> GetGenre()
+        {
+            //GenreDbModel genreDb = this.context.Genre.SingleOrDefault(x => x.Id == 1);
+            List<GenreDbModel> genreDb = await this.context.Genre.ToListAsync();
+            
+            if (genreDb == null)
+                return NotFound();
+
+            var genreApi = this.mapper.Map<List<GenreDbModel>, List<GenreApiModel>>(genreDb);
+
+            return Ok(genreDb);
         }
 
     }

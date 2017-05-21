@@ -1,14 +1,18 @@
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
+using System.Threading.Tasks;
 
-namespace Angular2_Core_Vidly.Core.DbModels
+namespace Vidly.Core.DbModels
 {
-     [Table("tb_Genre")]
+    [Table("tb_Genre")]
     public class GenreDbModel
     {
-        public int Id {get; set; }
+        public int Id { get; set; }
         [Required]
         [StringLength(255)]
-        public string Name {get ; set; }
+        public string Name { get; set; }
     }
 }

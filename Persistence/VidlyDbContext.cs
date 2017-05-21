@@ -1,5 +1,5 @@
-using Angular2_Core_Vidly.Core.DbModels;
 using Microsoft.EntityFrameworkCore;
+using Vidly.Core.DbModels;
 
 namespace Angular2_Core_Vidly.Persistence
 {

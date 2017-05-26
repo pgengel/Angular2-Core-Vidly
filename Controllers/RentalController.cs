@@ -30,12 +30,25 @@ namespace Vidly.Controllers
             var renetalDb = mapper.Map<RentalApiModel, RentalDbModel>(rentalApiModel);
 
             context.Rental.Add(renetalDb);
-            await context.SaveChangesAsync();
+            //await context.SaveChangesAsync();
+            var result = mapper.Map<RentalDbModel, RentalApiModel>(renetalDb);
 
-            //var result
+            return Ok(result);
+        }
 
+        [HttpPost("/api/rental/new/{id}")]
+        public async Task<IActionResult> UpdateRental(int id, [FromBody]RentalApiModel rentalApiModel)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
 
-            return Ok(renetalDb);
+            var renetalDb = await context.Rental.FindAsync(id);
+            mapper.Map<RentalApiModel, RentalDbModel>(rentalApiModel, renetalDb);
+
+            //await context.SaveChangesAsync();
+            var result = mapper.Map<RentalDbModel, RentalApiModel>(renetalDb);
+
+            return Ok(result);
         }
     }
 }

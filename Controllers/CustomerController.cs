@@ -32,7 +32,7 @@ namespace Angular2_Core_Vidly.Controllers
             return Ok(customersApi);
         }
 
-        [HttpGet("/api/customers/new")]
+        [HttpGet("/api/customers/getMembershipType")]
         public async Task<IActionResult> getMembershipType()
         {
             var membershipTypeDb = await this.context.MembershipType.ToListAsync();
@@ -43,6 +43,23 @@ namespace Angular2_Core_Vidly.Controllers
             var membershipTypeApi = mapper.Map<List<MembershipTypeDbModel>, List<MembershipTypeApiModel>>(membershipTypeDb);
 
             return Ok(membershipTypeApi);
+        }
+
+
+        [HttpGet("/api/customers/new")]
+        public async Task<IActionResult> CreateCustomer([FromBody] CustomerApiModel customerApiModel)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            //var customerDbModel = mapper.Map<CustomerApiModel, CustomerDbModel>(customerApiModel);
+
+            //context.Customer.Add(customerDbModel);
+            //await context.SaveChangesAsync();
+
+            //var result = mapper.Map<CustomerDbModel, CustomerApiModel>(customerDbModel);
+
+            return Ok(customerApiModel);
         }
     }
 }

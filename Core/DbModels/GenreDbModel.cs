@@ -10,7 +10,8 @@ namespace Vidly.Core.DbModels
     [Table("tb_Genre")]
     public class GenreDbModel
     {
-        public int Id { get; set; }
+        [Key]
+        public int GenreId { get; set; }
         [Required]
         [StringLength(255)]
         public string Name { get; set; }

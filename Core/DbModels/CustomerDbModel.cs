@@ -10,8 +10,9 @@ namespace Vidly.Core.DbModels
     [Table("tb_Customer")]
     public class CustomerDbModel
     {
-        public int Id { get; set; }
-        [Required]
+        [Key]
+        public int CustomerId { get; set; }
+        //[Required]
         [StringLength(255)]
         public string Name { get; set; }
         public bool isSubscribedToNewsLetter { get; set; }

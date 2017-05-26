@@ -18,9 +18,9 @@ namespace Angular2_Core_Vidly.Persistence
             
         }
 
-        // protected override void OnModelCreating(ModelBuilder modelBuilder)
-        // {
-        //     modelBuilder.Entity<VehicleFeature>().HasKey(vf => new { vf.VehicleId, vf.FeatureId});
-        // }
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<CustomerMovieDbModel>().HasKey(cm => new { cm.CustomerId, cm.MovieId});
+        }
     }
 }

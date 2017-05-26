@@ -36,7 +36,7 @@ namespace Vidly.Controllers
             return Ok(result);
         }
 
-        [HttpPost("/api/rental/new/{id}")]
+        [HttpPut("/api/rental/new/{id}")]
         public async Task<IActionResult> UpdateRental(int id, [FromBody]RentalApiModel rentalApiModel)
         {
             if (!ModelState.IsValid)

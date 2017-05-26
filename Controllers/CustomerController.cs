@@ -77,5 +77,22 @@ namespace Angular2_Core_Vidly.Controllers
 
             return Ok(customerApiModel);
         }
+
+
+        [HttpPut("/api/customers/{id}")]
+        public async Task<IActionResult> UpdateCustomer(int id, [FromBody] CustomerApiModel customerApiModel)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            //var customerDbModel = mapper.Map<CustomerApiModel, CustomerDbModel>(customerApiModel);
+
+            //context.Customer.Add(customerDbModel);
+            //await context.SaveChangesAsync();
+
+            //var result = mapper.Map<CustomerDbModel, CustomerApiModel>(customerDbModel);
+
+            return Ok(customerApiModel);
+        }
     }
 }

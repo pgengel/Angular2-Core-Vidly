@@ -14,12 +14,13 @@ namespace Vidly.Core.DbModels
         public int Id { get; set; }
         public int CustomerId { get; set; }
         public CustomerDbModel Customer { get; set; }
-        public int MovieId { get; set; }
-        public ICollection<MovieDbModel> Movies { get; set; }
+        public DateTime DateRented { get; set; }
+        public DateTime? DateReturned { get; set; }
+        public ICollection<CustomerMovieDbModel> Movies { get; set; }
 
         public RentalDbModel()
         {
-            Movies = new Collection<MovieDbModel>();
+            Movies = new Collection<CustomerMovieDbModel>();
         }
     }
 }

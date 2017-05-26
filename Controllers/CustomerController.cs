@@ -33,7 +33,7 @@ namespace Angular2_Core_Vidly.Controllers
         }
 
         [HttpGet("/api/customers/getMembershipType")]
-        public async Task<IActionResult> getMembershipType()
+        public async Task<IActionResult> GetMembershipType()
         {
             var membershipTypeDb = await this.context.MembershipType.ToListAsync();
 
@@ -46,8 +46,24 @@ namespace Angular2_Core_Vidly.Controllers
         }
 
 
-        [HttpGet("/api/customers/new")]
+        [HttpPost("/api/customers/new")]
         public async Task<IActionResult> CreateCustomer([FromBody] CustomerApiModel customerApiModel)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            //var customerDbModel = mapper.Map<CustomerApiModel, CustomerDbModel>(customerApiModel);
+
+            //context.Customer.Add(customerDbModel);
+            //await context.SaveChangesAsync();
+
+            //var result = mapper.Map<CustomerDbModel, CustomerApiModel>(customerDbModel);
+
+            return Ok(customerApiModel);
+        }
+
+        [HttpDelete("/api/customers/{id}")]
+        public async Task<IActionResult> DeleteCustomer(int id, [FromBody] CustomerApiModel customerApiModel)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);

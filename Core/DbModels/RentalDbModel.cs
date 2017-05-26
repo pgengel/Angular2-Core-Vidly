@@ -11,8 +11,7 @@ namespace Vidly.Core.DbModels
     [Table("tb_Rental")]
     public class RentalDbModel
     {
-        [Key]
-        public int RentalId { get; set; }
+        public int Id { get; set; }
         public int CustomerId { get; set; }
         public CustomerDbModel Customer { get; set; }
         public int MovieId { get; set; }

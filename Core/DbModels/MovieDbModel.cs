@@ -10,8 +10,7 @@ namespace Vidly.Core.DbModels
     [Table("tb_Movie")]
     public class MovieDbModel
     {
-        [Key]
-        public int MovieId { get; set; }
+        public int Id { get; set; }
         [Required]
         [StringLength(255)]
         public string Name { get; set; }

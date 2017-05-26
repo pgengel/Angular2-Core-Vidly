@@ -10,8 +10,7 @@ namespace Vidly.Core.DbModels
     [Table("tb_MembershipType")]
     public class MembershipTypeDbModel
     {
-        [Key]
-        public int MembershipTypeId { get; set; }
+        public int Id { get; set; }
         [Required]
         public string Name { get; set; }
         public int SignUpFee { get; set; }

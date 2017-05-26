@@ -32,6 +32,32 @@ namespace Angular2_Core_Vidly.Controllers
             return Ok(moviesApi);
         }
 
+        [HttpPost("/api/movies/new")]
+        public async Task<IActionResult> CreateMovies([FromBody] MovieApiModel movieApiModel)
+        {
+            var moviesDb = await this.context.Movie.ToListAsync();
+            
+            if (moviesDb == null)
+                return NotFound();
+
+            var moviesApi = this.mapper.Map<List<MovieDbModel>, List<MovieApiModel>>(moviesDb);
+
+            return Ok(moviesApi);
+        }
+
+        [HttpDelete("/api/movies/{id}")]
+        public async Task<IActionResult> DeleteMovies(int id)
+        {
+            var moviesDb = await this.context.Movie.ToListAsync();
+            
+            if (moviesDb == null)
+                return NotFound();
+
+            var moviesApi = this.mapper.Map<List<MovieDbModel>, List<MovieApiModel>>(moviesDb);
+
+            return Ok(moviesApi);
+        }
+
         [HttpGet("/api/genre")]
         public async Task<IActionResult> GetGenre()
         {

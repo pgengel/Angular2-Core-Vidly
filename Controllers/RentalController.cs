@@ -19,20 +19,58 @@ namespace Vidly.Controllers
         {
             this.mapper = mapper;
             this.context = context;
-
         }
 
-        [HttpPost("/api/rental/new")]
+        [HttpGet("/api/rentals")]
+        public async Task<IActionResult> GetRentals()
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var rentalDbModel = await context.Rental
+                .Include(r => r.Customer)
+                    .ThenInclude(r => r.MembershipType)
+                //.Include(r => r.Movies.ToList())
+                .ToListAsync();
+
+            if (rentalDbModel == null)
+                return NotFound(ModelState);
+
+            var rentalApiModel = mapper.Map<List<RentalDbModel>, List<RentalApiModel>>(rentalDbModel);
+
+            return Ok(rentalApiModel);
+        }
+
+        [HttpGet("/api/rentals/{id}")]
+        public async Task<IActionResult> GetRentals(int id)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var rentalDbModel = await context.Rental
+                .Include(r => r.Customer)
+                //.Include(r => r.Movies)
+                .SingleOrDefaultAsync(r => r.Id == id);
+
+            if (rentalDbModel == null)
+                return NotFound(ModelState);
+
+            var rentalApiModel = mapper.Map<RentalDbModel, RentalApiModel>(rentalDbModel);
+
+            return Ok(rentalApiModel);
+        }
+
+        [HttpPost("/api/rentals")]
         public async Task<IActionResult> CreateRental([FromBody]RentalApiModel rentalApiModel)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var renetalDb = mapper.Map<RentalApiModel, RentalDbModel>(rentalApiModel);
+            var renetalDbModel = mapper.Map<RentalApiModel, RentalDbModel>(rentalApiModel);
 
-            context.Rental.Add(renetalDb);
-            //await context.SaveChangesAsync();
-            var result = mapper.Map<RentalDbModel, RentalApiModel>(renetalDb);
+            context.Rental.Add(renetalDbModel);
+            await context.SaveChangesAsync();
+            var result = mapper.Map<RentalDbModel, RentalApiModel>(renetalDbModel);
 
             return Ok(result);
         }

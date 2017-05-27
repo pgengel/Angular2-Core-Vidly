@@ -8,7 +8,8 @@ namespace Vidly.Controllers.ApiModels
 {
     public class RentalApiModel
     {
-        public string CustomerName { get; set; }
+        public int Id { get; set; }
+        public string Customer { get; set; }
         public ICollection<int> Movies { get; set; }
         public RentalApiModel()
         {

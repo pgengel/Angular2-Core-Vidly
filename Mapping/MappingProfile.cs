@@ -27,22 +27,24 @@ namespace Angular2_Core_Vidly.Mapping
                 .ForMember(mdb => mdb.Genre, opt => opt.Ignore())
                 .ForMember(mdb => mdb.Id, opt => opt.Ignore());
 
-                
+
             CreateMap<RentalApiModel, RentalDbModel>()
                 .ForMember(rdb => rdb.Movies, opt => opt.Ignore())
-                .AfterMap((rapi, rdb) => {
+                .ForMember(rdb => rdb.Customer, opt => opt.Ignore())
+                //.ForMember(rdb => rdb.Customer.Name, opt => opt.MapFrom(rapi => rapi.Customer))
+                .AfterMap((rapi, rdb) =>
+                {
                     //Remove unselected movies
-                    var removedMovies = new List<CustomerMovieDbModel>();
-                    foreach (var r in rdb.Movies)
-                        if (!rapi.Movies.Contains(r.MovieId))
-                            removedMovies.Add(r);
-                    foreach (var r in removedMovies)
-                        rapi.Movies.Remove(r.MovieId);
+                    var removedMovies = rdb.Movies.Where(m => !rapi.Movies.Contains(m.MovieId));
+                    foreach (var m in removedMovies)
+                        rdb.Movies.Remove(m);
 
                     //add new movies
-                    foreach (var id in rapi.Movies)
-                        if (!rdb.Movies.Any(r => r.MovieId == id))
-                            rdb.Movies.Add(new CustomerMovieDbModel { MovieId = id });  
+                    var addedMovies = rapi.Movies.Where(id => !rdb.Movies.Any(m => m.MovieId == id)).Select(id => new CustomerMovieDbModel { MovieId = id });
+                    foreach (var m in addedMovies)
+                        rdb.Movies.Add(m);
+
+
                 });
 
         }

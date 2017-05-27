@@ -20,10 +20,13 @@ namespace Angular2_Core_Vidly.Mapping
 
             //API to Domain
             CreateMap<CustomerApiModel, CustomerDbModel>()
-                .ForMember(cdb => cdb.MembershipType, opt => opt.Ignore());
+                .ForMember(cdb => cdb.MembershipType, opt => opt.Ignore())
+                .ForMember(cdb => cdb.Id, opt => opt.Ignore());
 
             CreateMap<MovieApiModel, MovieDbModel>()
-                .ForMember(mdb => mdb.Genre, opt => opt.Ignore());
+                .ForMember(mdb => mdb.Genre, opt => opt.Ignore())
+                .ForMember(mdb => mdb.Id, opt => opt.Ignore());
+
                 
             CreateMap<RentalApiModel, RentalDbModel>()
                 .ForMember(rdb => rdb.Movies, opt => opt.Ignore())
@@ -39,14 +42,8 @@ namespace Angular2_Core_Vidly.Mapping
                     //add new movies
                     foreach (var id in rapi.Movies)
                         if (!rdb.Movies.Any(r => r.MovieId == id))
-                            rdb.Movies.Add(new CustomerMovieDbModel { MovieId = id });
-
-                    
+                            rdb.Movies.Add(new CustomerMovieDbModel { MovieId = id });  
                 });
-
-                //.ForMember(rdb => rdb.Customer, opt => opt.Ignore())
-                //.ForMember(rdb => rdb.Customer, opt => opt.MapFrom(rapi => rapi.customerName))
-                //.ForMember(rdb => rdb.Movies, opt => opt.MapFrom(rapi => rapi.Movies.Select(id => new CustomerMovieDbModel { MovieId = id })));
 
         }
     }

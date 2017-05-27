@@ -103,14 +103,14 @@ namespace Angular2_Core_Vidly.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            //var customerDbModel = mapper.Map<CustomerApiModel, CustomerDbModel>(customerApiModel);
+            var customerDbModel = await context.Customer.FindAsync(id);
+            mapper.Map<CustomerApiModel, CustomerDbModel>(customerApiModel, customerDbModel);
 
-            //context.Customer.Add(customerDbModel);
-            //await context.SaveChangesAsync();
+            await context.SaveChangesAsync();
 
-            //var result = mapper.Map<CustomerDbModel, CustomerApiModel>(customerDbModel);
+            var result = mapper.Map<CustomerDbModel, CustomerApiModel>(customerDbModel);
 
-            return Ok(customerApiModel);
+            return Ok(result);
         }
     }
 }

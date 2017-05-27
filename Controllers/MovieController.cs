@@ -61,6 +61,23 @@ namespace Angular2_Core_Vidly.Controllers
             return Ok(result);
         }
 
+        [HttpPut("/api/movies/{id}")]
+        public async Task<IActionResult> UpdateMovies(int id, [FromBody] MovieApiModel movieApiModel)
+        {
+            if (movieApiModel == null)
+                return BadRequest(ModelState);
+
+            var movieDbModel = await context.Movie.FindAsync(id);
+
+            mapper.Map<MovieApiModel, MovieDbModel>(movieApiModel, movieDbModel);
+
+            await context.SaveChangesAsync();
+
+            var result = mapper.Map<MovieDbModel, MovieApiModel>(movieDbModel);
+
+            return Ok(result);
+        }
+
         [HttpDelete("/api/movies/{id}")]
         public async Task<IActionResult> DeleteMovies(int id)
         {

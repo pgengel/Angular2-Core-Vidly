@@ -22,7 +22,7 @@ namespace Angular2_Core_Vidly.Controllers
         [HttpGet("/api/movies")]
         public async Task<IActionResult> GetMovies()
         {
-            var moviesDb = await this.context.Movie.ToListAsync();
+            var moviesDb = await this.context.Movie.Include(m => m.Genre).ToListAsync();
             
             if (moviesDb == null)
                 return NotFound();
@@ -32,30 +32,50 @@ namespace Angular2_Core_Vidly.Controllers
             return Ok(moviesApi);
         }
 
-        [HttpPost("/api/movies/new")]
-        public async Task<IActionResult> CreateMovies([FromBody] MovieApiModel movieApiModel)
+
+        [HttpGet("/api/movies/{id}")]
+        public async Task<IActionResult> GetMovies(int id)
         {
-            var moviesDb = await this.context.Movie.ToListAsync();
-            
+            var moviesDb = await this.context.Movie.Include(m => m.Genre).SingleOrDefaultAsync(m => m.GenreId == id);
+
             if (moviesDb == null)
                 return NotFound();
 
-            var moviesApi = this.mapper.Map<List<MovieDbModel>, List<MovieApiModel>>(moviesDb);
+            var moviesApi = this.mapper.Map<MovieDbModel, MovieApiModel>(moviesDb);
 
             return Ok(moviesApi);
+        }
+
+        [HttpPost("/api/movies")]
+        public async Task<IActionResult> CreateMovies([FromBody] MovieApiModel movieApiModel)
+        {   
+            if (movieApiModel == null)
+                return BadRequest();
+
+            var moviesDb = this.mapper.Map<MovieApiModel, MovieDbModel>(movieApiModel);
+            context.Add(moviesDb);
+            await context.SaveChangesAsync();
+
+            var result = this.mapper.Map<MovieDbModel, MovieApiModel>(moviesDb);
+
+            return Ok(result);
         }
 
         [HttpDelete("/api/movies/{id}")]
         public async Task<IActionResult> DeleteMovies(int id)
         {
-            var moviesDb = await this.context.Movie.ToListAsync();
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var moviesDb = await this.context.Movie.FindAsync(id);
             
             if (moviesDb == null)
                 return NotFound();
 
-            var moviesApi = this.mapper.Map<List<MovieDbModel>, List<MovieApiModel>>(moviesDb);
+            context.Movie.Remove(moviesDb);
+            await context.SaveChangesAsync();
 
-            return Ok(moviesApi);
+            return Ok(id);
         }
 
         [HttpGet("/api/genre")]

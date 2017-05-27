@@ -1,6 +1,7 @@
 ﻿using Angular2_Core_Vidly.Persistence;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -36,13 +37,17 @@ namespace Vidly.Controllers
             return Ok(result);
         }
 
-        [HttpPut("/api/rental/new/{id}")]
+        [HttpPut("/api/rental/{id}")]
         public async Task<IActionResult> UpdateRental(int id, [FromBody]RentalApiModel rentalApiModel)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var renetalDb = await context.Rental.FindAsync(id);
+            var renetalDb = await context.Rental.Include(r => r.Movies).SingleOrDefaultAsync(r => r.Id == id);
+
+            if (renetalDb == null)
+                return NotFound();
+
             mapper.Map<RentalApiModel, RentalDbModel>(rentalApiModel, renetalDb);
 
             //await context.SaveChangesAsync();

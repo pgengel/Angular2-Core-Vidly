@@ -19,18 +19,35 @@ namespace Angular2_Core_Vidly.Controllers
         {
             this.mapper = mapper;
             this.context = context;
-
         }
 
         [HttpGet("/api/customers")]
         public async Task<IActionResult> GetCustomers()
         {
-            var customersDb = await this.context.Customer.ToListAsync();
+            var customersDb = await this.context.Customer.Include(c => c.MembershipType).ToListAsync();
+
             if(customersDb == null)
                 return NotFound();
+
             var customersApi = mapper.Map<List<CustomerDbModel>, List<CustomerApiModel>>(customersDb);
+
             return Ok(customersApi);
         }
+
+
+        [HttpGet("/api/customers/{id}")]
+        public async Task<IActionResult> GetCustomers(int id)
+        {
+            var customersDb = await this.context.Customer.Include(c => c.MembershipType).SingleOrDefaultAsync(c => c.Id == id);
+
+            if (customersDb == null)
+                return NotFound(id);
+
+            var customersApi = mapper.Map<CustomerDbModel, CustomerApiModel>(customersDb);
+
+            return Ok(customersApi);
+        }
+
 
         [HttpGet("/api/customers/getMembershipType")]
         public async Task<IActionResult> GetMembershipType()
@@ -46,36 +63,37 @@ namespace Angular2_Core_Vidly.Controllers
         }
 
 
-        [HttpPost("/api/customers/new")]
+        [HttpPost("/api/customers")]
         public async Task<IActionResult> CreateCustomer([FromBody] CustomerApiModel customerApiModel)
         {
-            if (!ModelState.IsValid)
+            if (customerApiModel == null)
                 return BadRequest(ModelState);
 
-            //var customerDbModel = mapper.Map<CustomerApiModel, CustomerDbModel>(customerApiModel);
+            var customerDbModel = mapper.Map<CustomerApiModel, CustomerDbModel>(customerApiModel);
 
-            //context.Customer.Add(customerDbModel);
-            //await context.SaveChangesAsync();
+            context.Customer.Add(customerDbModel);
+            await context.SaveChangesAsync();
 
-            //var result = mapper.Map<CustomerDbModel, CustomerApiModel>(customerDbModel);
+            var result = mapper.Map<CustomerDbModel, CustomerApiModel>(customerDbModel);
 
-            return Ok(customerApiModel);
+            return Ok(result);
         }
 
         [HttpDelete("/api/customers/{id}")]
-        public async Task<IActionResult> DeleteCustomer(int id, [FromBody] CustomerApiModel customerApiModel)
+        public async Task<IActionResult> DeleteCustomer(int id)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            //var customerDbModel = mapper.Map<CustomerApiModel, CustomerDbModel>(customerApiModel);
+            var customerDbModel = await context.Customer.FindAsync(id);
 
-            //context.Customer.Add(customerDbModel);
-            //await context.SaveChangesAsync();
+            if (customerDbModel == null)
+                return NotFound(id);    
 
-            //var result = mapper.Map<CustomerDbModel, CustomerApiModel>(customerDbModel);
+            context.Remove(customerDbModel);
+            await context.SaveChangesAsync();
 
-            return Ok(customerApiModel);
+            return Ok(id);
         }
 
 

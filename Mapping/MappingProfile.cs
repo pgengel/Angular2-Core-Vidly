@@ -19,11 +19,34 @@ namespace Angular2_Core_Vidly.Mapping
                 .ForMember(rapi => rapi.Movies, opt => opt.MapFrom(rdb => rdb.Movies.Select(r => r.MovieId)));
 
             //API to Domain
+            CreateMap<CustomerApiModel, CustomerDbModel>()
+                .ForMember(cdb => cdb.MembershipType, opt => opt.Ignore());
+
+            CreateMap<MovieApiModel, MovieDbModel>()
+                .ForMember(mdb => mdb.Genre, opt => opt.Ignore());
+                
             CreateMap<RentalApiModel, RentalDbModel>()
-                .ForMember(rdb => rdb.Id, opt => opt.Ignore())
+                .ForMember(rdb => rdb.Movies, opt => opt.Ignore())
+                .AfterMap((rapi, rdb) => {
+                    //Remove unselected movies
+                    var removedMovies = new List<CustomerMovieDbModel>();
+                    foreach (var r in rdb.Movies)
+                        if (!rapi.Movies.Contains(r.MovieId))
+                            removedMovies.Add(r);
+                    foreach (var r in removedMovies)
+                        rapi.Movies.Remove(r.MovieId);
+
+                    //add new movies
+                    foreach (var id in rapi.Movies)
+                        if (!rdb.Movies.Any(r => r.MovieId == id))
+                            rdb.Movies.Add(new CustomerMovieDbModel { MovieId = id });
+
+                    
+                });
+
                 //.ForMember(rdb => rdb.Customer, opt => opt.Ignore())
                 //.ForMember(rdb => rdb.Customer, opt => opt.MapFrom(rapi => rapi.customerName))
-                .ForMember(rdb => rdb.Movies, opt => opt.MapFrom(rapi => rapi.Movies.Select(id => new CustomerMovieDbModel { MovieId = id })));
+                //.ForMember(rdb => rdb.Movies, opt => opt.MapFrom(rapi => rapi.Movies.Select(id => new CustomerMovieDbModel { MovieId = id })));
 
         }
     }

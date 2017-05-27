@@ -16,8 +16,8 @@ namespace Vidly.Core.DbModels
         public string Name { get; set; }
         public GenreDbModel Genre { get; set; }
         public int GenreId { get; set; }
-        public DateTime DateAdded { get; set; }
-        public DateTime ReleaseDate { get; set; }
+        public DateTime? DateAdded { get; set; }
+        public DateTime? ReleaseDate { get; set; }
         [Range(1, 20)]
         public int NumberInStock { get; set; }
         public int NumberAvailable { get; set; }

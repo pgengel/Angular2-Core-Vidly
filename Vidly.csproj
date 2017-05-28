@@ -28,6 +28,8 @@
     <Content Remove="ClientApp\**" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Controllers\Validation\" />
+    <Folder Include="Migrations\" />
     <Folder Include="Migrations\" />
   </ItemGroup>
   <Target Name="RunWebpack" AfterTargets="ComputeFilesToPublish">

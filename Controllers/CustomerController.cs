@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Vidly.Core.DbModels;
 using Vidly.Controllers.ApiModels;
+using Vidly.Persistence;
+using Angular2_Core_Vidly.Core.ApiModels;
 
 namespace Angular2_Core_Vidly.Controllers
 {
@@ -14,19 +16,25 @@ namespace Angular2_Core_Vidly.Controllers
     {
         private readonly VidlyDbContext context;
         private readonly IMapper mapper;
+        private readonly ICustomerRepository customerRepo;
+        private readonly IUnitOfWork uow;
 
-        public CustomerController(VidlyDbContext context, IMapper mapper)
+        public CustomerController(IMapper mapper, 
+            ICustomerRepository customerRepo,
+            IUnitOfWork uow)
         {
             this.mapper = mapper;
             this.context = context;
+            this.customerRepo = customerRepo;
+            this.uow = uow;
         }
 
         [HttpGet("/api/customers")]
         public async Task<IActionResult> GetCustomers()
         {
-            var customersDb = await this.context.Customer.Include(c => c.MembershipType).ToListAsync();
+            var customersDb = await customerRepo.GetCustomers();
 
-            if(customersDb == null)
+            if (customersDb == null)
                 return NotFound();
 
             var customersApi = mapper.Map<List<CustomerDbModel>, List<CustomerApiModel>>(customersDb);
@@ -38,7 +46,7 @@ namespace Angular2_Core_Vidly.Controllers
         [HttpGet("/api/customers/{id}")]
         public async Task<IActionResult> GetCustomers(int id)
         {
-            var customersDb = await this.context.Customer.Include(c => c.MembershipType).SingleOrDefaultAsync(c => c.Id == id);
+            var customersDb = await customerRepo.GetCustomers(id);
 
             if (customersDb == null)
                 return NotFound(id);
@@ -52,7 +60,8 @@ namespace Angular2_Core_Vidly.Controllers
         [HttpGet("/api/customers/getMembershipType")]
         public async Task<IActionResult> GetMembershipType()
         {
-            var membershipTypeDb = await this.context.MembershipType.ToListAsync();
+            var membershipTypeDb = await this.context.MembershipType
+                .ToListAsync();
 
             if(membershipTypeDb == null)
                 return NotFound();
@@ -71,7 +80,7 @@ namespace Angular2_Core_Vidly.Controllers
 
             var customerDbModel = mapper.Map<CustomerApiModel, CustomerDbModel>(customerApiModel);
 
-            context.Customer.Add(customerDbModel);
+            customerRepo.AddCustomer(customerDbModel);
             await context.SaveChangesAsync();
 
             var result = mapper.Map<CustomerDbModel, CustomerApiModel>(customerDbModel);
@@ -85,12 +94,12 @@ namespace Angular2_Core_Vidly.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var customerDbModel = await context.Customer.FindAsync(id);
+            var customerDbModel = await customerRepo.GetCustomers(id, includeRelated: false);
 
             if (customerDbModel == null)
-                return NotFound(id);    
+                return NotFound(id);
 
-            context.Remove(customerDbModel);
+            customerRepo.RemoveCustomer(customerDbModel);
             await context.SaveChangesAsync();
 
             return Ok(id);
@@ -103,7 +112,8 @@ namespace Angular2_Core_Vidly.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var customerDbModel = await context.Customer.FindAsync(id);
+            var customerDbModel = await customerRepo.GetCustomers(id);
+
             mapper.Map<CustomerApiModel, CustomerDbModel>(customerApiModel, customerDbModel);
 
             await context.SaveChangesAsync();

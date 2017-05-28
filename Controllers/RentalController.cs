@@ -36,7 +36,7 @@ namespace Vidly.Controllers
             if (rentalDbModel == null)
                 return NotFound(ModelState);
 
-            var rentalApiModel = mapper.Map<List<RentalDbModel>, List<RentalApiModel>>(rentalDbModel);
+            var rentalApiModel = mapper.Map<List<RentalDbModel>, List<SaveRentalApiModel>>(rentalDbModel);
 
             return Ok(rentalApiModel);
         }
@@ -55,28 +55,28 @@ namespace Vidly.Controllers
             if (rentalDbModel == null)
                 return NotFound(ModelState);
 
-            var rentalApiModel = mapper.Map<RentalDbModel, RentalApiModel>(rentalDbModel);
+            var rentalApiModel = mapper.Map<RentalDbModel, SaveRentalApiModel>(rentalDbModel);
 
             return Ok(rentalApiModel);
         }
 
         [HttpPost("/api/rentals")]
-        public async Task<IActionResult> CreateRental([FromBody]RentalApiModel rentalApiModel)
+        public async Task<IActionResult> CreateRental([FromBody]SaveRentalApiModel rentalApiModel)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var renetalDbModel = mapper.Map<RentalApiModel, RentalDbModel>(rentalApiModel);
+            var renetalDbModel = mapper.Map<SaveRentalApiModel, RentalDbModel>(rentalApiModel);
 
             context.Rental.Add(renetalDbModel);
             await context.SaveChangesAsync();
-            var result = mapper.Map<RentalDbModel, RentalApiModel>(renetalDbModel);
+            var result = mapper.Map<RentalDbModel, SaveRentalApiModel>(renetalDbModel);
 
             return Ok(result);
         }
 
         [HttpPut("/api/rental/{id}")]
-        public async Task<IActionResult> UpdateRental(int id, [FromBody]RentalApiModel rentalApiModel)
+        public async Task<IActionResult> UpdateRental(int id, [FromBody]SaveRentalApiModel rentalApiModel)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -86,10 +86,10 @@ namespace Vidly.Controllers
             if (renetalDb == null)
                 return NotFound();
 
-            mapper.Map<RentalApiModel, RentalDbModel>(rentalApiModel, renetalDb);
+            mapper.Map<SaveRentalApiModel, RentalDbModel>(rentalApiModel, renetalDb);
 
             //await context.SaveChangesAsync();
-            var result = mapper.Map<RentalDbModel, RentalApiModel>(renetalDb);
+            var result = mapper.Map<RentalDbModel, SaveRentalApiModel>(renetalDb);
 
             return Ok(result);
         }

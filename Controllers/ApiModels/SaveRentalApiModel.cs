@@ -6,15 +6,15 @@ using System.Threading.Tasks;
 
 namespace Vidly.Controllers.ApiModels
 {
-    public class RentalApiModel
+    public class SaveRentalApiModel
     {
         public int Id { get; set; }
-        public CustomerApiModel Customer { get; set; }
-        public ICollection<MovieApiModel> Movies { get; set; }
-
-        public RentalApiModel()
+        public string Customer { get; set; }
+        public ICollection<int> Movies { get; set; }
+        public SaveRentalApiModel()
         {
-            Movies = new Collection<MovieApiModel>();
+            Movies = new Collection<int>();
         }
     }
+
 }

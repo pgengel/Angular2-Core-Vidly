@@ -11,6 +11,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
+using Vidly.Persistence;
+using Angular2_Core_Vidly.Core.ApiModels;
 
 namespace WebApplicationBasic
 {
@@ -31,7 +33,8 @@ namespace WebApplicationBasic
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            // services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddScoped<ICustomerRepository, CustomerRepository>();
             services.AddAutoMapper(); 
             services.AddDbContext<VidlyDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("Default"))); //add using Microsoft.EntityFrameworkCore;
             // Add framework services.

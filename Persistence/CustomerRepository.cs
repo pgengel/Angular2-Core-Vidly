@@ -35,6 +35,11 @@ namespace Vidly.Persistence
                 .SingleOrDefaultAsync(c => c.Id == id);
         }
 
+        public async Task<List<MembershipTypeDbModel>> GetMembershipType()
+        {
+            return await dBContext.MembershipType.ToListAsync();
+        }
+
         public void AddCustomer(CustomerDbModel customerDbModel)
         {
             dBContext.Customer.Add(customerDbModel);

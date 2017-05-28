@@ -9,6 +9,7 @@ namespace Vidly.Persistence
     {
         Task<List<CustomerDbModel>> GetCustomers();
         Task<CustomerDbModel> GetCustomers(int id, bool includeRelated = true);
+        Task<List<MembershipTypeDbModel>> GetMembershipType();
         void AddCustomer(CustomerDbModel customerDbModel);
         void RemoveCustomer(CustomerDbModel customerDbModel);
     }

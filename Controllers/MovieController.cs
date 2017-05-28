@@ -6,23 +6,30 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Vidly.Core.DbModels;
 using Vidly.Controllers.ApiModels;
+using Vidly.Persistence;
+using Angular2_Core_Vidly.Core.ApiModels;
 
 namespace Angular2_Core_Vidly.Controllers
 {
     public class MovieController : Controller
     {
-        private readonly VidlyDbContext context;
         private readonly IMapper mapper;
-        public MovieController(VidlyDbContext context, IMapper mapper)
+        private readonly IMovieRepository movieRepo;
+        private readonly IUnitOfWork uow;
+
+        public MovieController(IUnitOfWork uow, 
+            IMovieRepository movieRepo, 
+            IMapper mapper)
         {
             this.mapper = mapper;
-            this.context = context;
+            this.movieRepo = movieRepo;
+            this.uow = uow;
         }
 
         [HttpGet("/api/movies")]
         public async Task<IActionResult> GetMovies()
         {
-            var moviesDb = await this.context.Movie.Include(m => m.Genre).ToListAsync();
+            var moviesDb = await movieRepo.GetMovies();
             
             if (moviesDb == null)
                 return NotFound();
@@ -36,7 +43,7 @@ namespace Angular2_Core_Vidly.Controllers
         [HttpGet("/api/movies/{id}")]
         public async Task<IActionResult> GetMovies(int id)
         {
-            var moviesDb = await this.context.Movie.Include(m => m.Genre).SingleOrDefaultAsync(m => m.GenreId == id);
+            var moviesDb = await movieRepo.GetMovies(id);
 
             if (moviesDb == null)
                 return NotFound();
@@ -53,8 +60,8 @@ namespace Angular2_Core_Vidly.Controllers
                 return BadRequest();
 
             var moviesDb = this.mapper.Map<MovieApiModel, MovieDbModel>(movieApiModel);
-            context.Add(moviesDb);
-            await context.SaveChangesAsync();
+            movieRepo.AddMovie(moviesDb);
+            await uow.CompleteAsync();
 
             var result = this.mapper.Map<MovieDbModel, MovieApiModel>(moviesDb);
 
@@ -67,11 +74,11 @@ namespace Angular2_Core_Vidly.Controllers
             if (movieApiModel == null)
                 return BadRequest(ModelState);
 
-            var movieDbModel = await context.Movie.FindAsync(id);
+            var movieDbModel = await movieRepo.GetMovies(id);
 
             mapper.Map<MovieApiModel, MovieDbModel>(movieApiModel, movieDbModel);
 
-            await context.SaveChangesAsync();
+            await uow.CompleteAsync();
 
             var result = mapper.Map<MovieDbModel, MovieApiModel>(movieDbModel);
 
@@ -84,13 +91,14 @@ namespace Angular2_Core_Vidly.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var moviesDb = await this.context.Movie.FindAsync(id);
+            var moviesDb = await movieRepo.GetMovies(id, includedRelated: false);
             
             if (moviesDb == null)
                 return NotFound();
 
-            context.Movie.Remove(moviesDb);
-            await context.SaveChangesAsync();
+            movieRepo.RemoveMovie(moviesDb);
+
+            await uow.CompleteAsync();
 
             return Ok(id);
         }
@@ -98,8 +106,7 @@ namespace Angular2_Core_Vidly.Controllers
         [HttpGet("/api/genre")]
         public async Task<IActionResult> GetGenre()
         {
-            //GenreDbModel genreDb = this.context.Genre.SingleOrDefault(x => x.Id == 1);
-            List<GenreDbModel> genreDb = await this.context.Genre.ToListAsync();
+            var genreDb = await movieRepo.GetGenre();
             
             if (genreDb == null)
                 return NotFound();

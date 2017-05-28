@@ -14,7 +14,6 @@ namespace Angular2_Core_Vidly.Controllers
     //[Route("/api/customer")]
     public class CustomerController : Controller
     {
-        private readonly VidlyDbContext context;
         private readonly IMapper mapper;
         private readonly ICustomerRepository customerRepo;
         private readonly IUnitOfWork uow;
@@ -24,7 +23,6 @@ namespace Angular2_Core_Vidly.Controllers
             IUnitOfWork uow)
         {
             this.mapper = mapper;
-            this.context = context;
             this.customerRepo = customerRepo;
             this.uow = uow;
         }
@@ -57,11 +55,10 @@ namespace Angular2_Core_Vidly.Controllers
         }
 
 
-        [HttpGet("/api/customers/getMembershipType")]
+        [HttpGet("/api/customers/MembershipType")]
         public async Task<IActionResult> GetMembershipType()
         {
-            var membershipTypeDb = await this.context.MembershipType
-                .ToListAsync();
+            var membershipTypeDb = await customerRepo.GetMembershipType();
 
             if(membershipTypeDb == null)
                 return NotFound();
@@ -81,7 +78,7 @@ namespace Angular2_Core_Vidly.Controllers
             var customerDbModel = mapper.Map<CustomerApiModel, CustomerDbModel>(customerApiModel);
 
             customerRepo.AddCustomer(customerDbModel);
-            await context.SaveChangesAsync();
+            await uow.CompleteAsync();
 
             var result = mapper.Map<CustomerDbModel, CustomerApiModel>(customerDbModel);
 
@@ -100,7 +97,7 @@ namespace Angular2_Core_Vidly.Controllers
                 return NotFound(id);
 
             customerRepo.RemoveCustomer(customerDbModel);
-            await context.SaveChangesAsync();
+            await uow.CompleteAsync();
 
             return Ok(id);
         }
@@ -116,7 +113,7 @@ namespace Angular2_Core_Vidly.Controllers
 
             mapper.Map<CustomerApiModel, CustomerDbModel>(customerApiModel, customerDbModel);
 
-            await context.SaveChangesAsync();
+            await uow.CompleteAsync();
 
             var result = mapper.Map<CustomerDbModel, CustomerApiModel>(customerDbModel);
 

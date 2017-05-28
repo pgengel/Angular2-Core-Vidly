@@ -35,6 +35,7 @@ namespace WebApplicationBasic
         {
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<ICustomerRepository, CustomerRepository>();
+            services.AddScoped<IMovieRepository, MovieRepository>();
             services.AddAutoMapper(); 
             services.AddDbContext<VidlyDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("Default"))); //add using Microsoft.EntityFrameworkCore;
             // Add framework services.

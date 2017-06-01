@@ -11,4 +11,9 @@ export class CustomerService {
     return this.http.get('/api/customers')
       .map(res => res.json());
   }
+
+  createCustomer(subscription){
+    return this.http.post("/api/customers", subscription)
+      .map(res => res.json());
+  }
 }

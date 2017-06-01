@@ -11,8 +11,15 @@ export class CustomerFormComponent implements OnInit {
   private membershipType : any[];
   private typeOfMembership : any = {};
   private isSubscribed : boolean = false; 
+  private customerName : string = "";
+  private subscription : any = {
+    Name : "",
+    isSubscribedToNewsLetter: false,
+    MembershipType: {},
+    // Birthday: ""
+  };
 
-  constructor(private membershipTypeService: MembershipTypeService) { }
+  constructor(private membershipTypeService: MembershipTypeService, private customerService: CustomerService) { }
 
   ngOnInit() {
     this.membershipTypeService.getMembershipType()
@@ -22,5 +29,11 @@ export class CustomerFormComponent implements OnInit {
   onMembershipTypeSelect(){
    var selectedMembershipType = this.membershipType.find(m => m.id == this.typeOfMembership.id);
    console.log(selectedMembershipType);
+  }
+
+  submit(){
+    console.log(this.subscription);
+    this.customerService.createCustomer(this.subscription)
+      .subscribe(c => c.console.log(this.subscription));
   }
 }

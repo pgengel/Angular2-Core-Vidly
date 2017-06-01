@@ -6,6 +6,9 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./rental-form.component.css']
 })
 export class RentalFormComponent implements OnInit {
+  isSubscribed : boolean = false;
+  customerName : string = "";
+  customerMovie : string[] = [];
 
   constructor() { }
 

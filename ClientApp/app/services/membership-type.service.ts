@@ -7,7 +7,7 @@ export class MembershipTypeService {
   constructor(private http: Http) { }
 
   getMembershipType(){
-    return this.http.get('/api/customers/new')
+    return this.http.get('/api/customers/membershiptype')
       .map(res => res.json());
   }
 }

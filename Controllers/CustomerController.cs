@@ -55,7 +55,7 @@ namespace Angular2_Core_Vidly.Controllers
         }
 
 
-        [HttpGet("/api/customers/MembershipType")]
+        [HttpGet("/api/customers/membershiptype")]
         public async Task<IActionResult> GetMembershipType()
         {
             var membershipTypeDb = await customerRepo.GetMembershipType();

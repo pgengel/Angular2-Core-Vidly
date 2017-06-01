@@ -1,22 +1,24 @@
 <h1>New Customer</h1>
-<p>{{ membershipType | json }}</p>
-<p>{{ typeOfMembership | json }}</p>
+<p>membershipType {{ membershipType | json }}</p>
+<p>typeOfMembership {{ subscription.MembershipType | json }}</p>
+<p>isSubscribed {{ subscription.isSubscribedToNewsLetter | json }}</p>
+<p>customerName {{ subscription.Name | json }}</p>
 
-<form>
+<form (ngSubmit)="submit()">
   <div class="form-group">
     <label for="name">Customer</label>
-    <input type="text" class="form-control" id="name" placeholder="Name">
+    <input type="text" class="form-control" id="customerName" placeholder="Name" name="customerName" [(ngModel)]="subscription.Name">
   </div>
   <div class="form-group">
     <label for="membershiptype">Membershiptype</label>
-    <select  class="form-control" id="membershiptype" placeholder="Membershiptype" (change)="onMembershipTypeSelect()" [(ngModel)]="typeOfMembership.id" name="membershipType">
+    <select  class="form-control" id="membershiptype" placeholder="Membershiptype" (change)="onMembershipTypeSelect()" [(ngModel)]="subscription.MembershipType" name="typeOfMembership">
       <option value=""></option>
       <option *ngFor="let m of membershipType" value="{{m.id}}">{{m.name}}</option>
     </select>
   </div>
   <div class="checkbox">
     <label for="subscribed">
-      <input type="checkbox" id="subscribed" value="false" name="isSubscribed"> Subscribe to Newsletter?
+      <input type="checkbox" id="subscribed" value="false" name="isSubscribed" [(ngModel)]="subscription.isSubscribedToNewsLetter"> Subscribe to Newsletter?
     </label>
   </div>
   <button type="submit" class="btn btn-default">Save</button>

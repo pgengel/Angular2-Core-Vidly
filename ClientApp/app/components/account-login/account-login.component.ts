@@ -6,7 +6,9 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./account-login.component.css']
 })
 export class AccountLoginComponent implements OnInit {
-
+  private accoutDetails : any = {
+    
+  }
   constructor() { }
 
   ngOnInit() {

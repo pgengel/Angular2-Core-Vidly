@@ -1,4 +1,5 @@
-import {FormsModule} from '@angular/forms';
+import { FormsModule } from '@angular/forms';
+import { ToastyModule } from 'ng2-toasty';
 import { MembershipTypeService } from './services/membership-type.service';
 import { CustomerService } from './services/customer.service';
 import { MovieService } from './services/movie.service';
@@ -32,6 +33,7 @@ import { RentalFormComponent } from './components/rental-form/rental-form.compon
         RentalFormComponent
     ],
     imports: [
+        ToastyModule.forRoot(),
         FormsModule,
         UniversalModule, // Must be first import. This automatically imports BrowserModule, HttpModule, and JsonpModule too.
         RouterModule.forRoot([

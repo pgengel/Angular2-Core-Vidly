@@ -1,3 +1,4 @@
+import {ToastyService} from 'ng2-toasty';
 import { MembershipTypeService } from './../../services/membership-type.service';
 import { CustomerService } from './../../services/customer.service';
 import { Component, OnInit } from '@angular/core';
@@ -19,7 +20,7 @@ export class CustomerFormComponent implements OnInit {
     // Birthday: ""
   };
 
-  constructor(private membershipTypeService: MembershipTypeService, private customerService: CustomerService) { }
+  constructor(private membershipTypeService: MembershipTypeService, private customerService: CustomerService, private  toastyService: ToastyService) { }
 
   ngOnInit() {
     this.membershipTypeService.getMembershipType()
@@ -37,9 +38,7 @@ export class CustomerFormComponent implements OnInit {
         .subscribe(c =>
             c.console.log(this.subscription),
             err => {
-                if (err.status == 400) {
-                    
-                }
+              this.toastyService.error({title: "Error", msg: "Anunexpected error happened", theme: "bootstrap", showClose: true, timeout: 5000})
             });
   }
 }

@@ -11,7 +11,8 @@ namespace Angular2_Core_Vidly.Mapping
         public MappingProfile()
         {
             //Domain to API
-            CreateMap<CustomerDbModel, CustomerApiModel>();
+            CreateMap<CustomerDbModel, CustomerApiModel>()
+				.ForMember(capi => capi.MembershipType, opt => opt.MapFrom(cdb => cdb.MembershipTypeId));
             CreateMap<MovieDbModel, MovieApiModel>();
             CreateMap<MembershipTypeDbModel, MembershipTypeApiModel>();
             CreateMap<GenreDbModel, GenreApiModel>();
@@ -25,7 +26,10 @@ namespace Angular2_Core_Vidly.Mapping
             //API to Domain
             CreateMap<CustomerApiModel, CustomerDbModel>()
                 .ForMember(cdb => cdb.MembershipType, opt => opt.Ignore())
-                .ForMember(cdb => cdb.Id, opt => opt.Ignore());
+                .ForMember(cdb => cdb.Id, opt => opt.Ignore())
+                .AfterMap((capi, cdb) => {
+                    cdb.MembershipTypeId = int.Parse(capi.MembershipType.ToString());
+                });
 
             CreateMap<MovieApiModel, MovieDbModel>()
                 .ForMember(mdb => mdb.Genre, opt => opt.Ignore())

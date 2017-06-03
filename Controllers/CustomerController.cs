@@ -14,108 +14,108 @@ namespace Angular2_Core_Vidly.Controllers
     //[Route("/api/customer")]
     public class CustomerController : Controller
     {
-        private readonly IMapper mapper;
-        private readonly ICustomerRepository customerRepo;
-        private readonly IUnitOfWork uow;
+        private readonly IMapper _mapper;
+        private readonly ICustomerRepository _customerRepo;
+        private readonly IUnitOfWork _uow;
 
         public CustomerController(IMapper mapper, 
             ICustomerRepository customerRepo,
             IUnitOfWork uow)
         {
-            this.mapper = mapper;
-            this.customerRepo = customerRepo;
-            this.uow = uow;
+            this._mapper = mapper;
+            this._customerRepo = customerRepo;
+            this._uow = uow;
         }
 
         [HttpGet("/api/customers")]
-        public async Task<IActionResult> GetCustomers()
+        public async Task<IActionResult> GetCustomersAsync()
         {
-            var customersDb = await customerRepo.GetCustomers();
+            var customersDb = await _customerRepo.GetCustomers();
 
             if (customersDb == null)
                 return NotFound();
 
-            var customersApi = mapper.Map<List<CustomerDbModel>, List<CustomerApiModel>>(customersDb);
+            var customersApi = _mapper.Map<List<CustomerDbModel>, List<CustomerApiModel>>(customersDb);
 
             return Ok(customersApi);
         }
 
 
         [HttpGet("/api/customers/{id}")]
-        public async Task<IActionResult> GetCustomers(int id)
+        public async Task<IActionResult> GetCustomersAsync(int id)
         {
-            var customersDb = await customerRepo.GetCustomers(id);
+            var customersDb = await _customerRepo.GetCustomers(id);
 
             if (customersDb == null)
                 return NotFound(id);
 
-            var customersApi = mapper.Map<CustomerDbModel, CustomerApiModel>(customersDb);
+            var customersApi = _mapper.Map<CustomerDbModel, CustomerApiModel>(customersDb);
 
             return Ok(customersApi);
         }
 
 
         [HttpGet("/api/customers/membershiptype")]
-        public async Task<IActionResult> GetMembershipType()
+        public async Task<IActionResult> GetMembershipTypeAsync()
         {
-            var membershipTypeDb = await customerRepo.GetMembershipType();
+            var membershipTypeDb = await _customerRepo.GetMembershipType();
 
             if(membershipTypeDb == null)
                 return NotFound();
 
-            var membershipTypeApi = mapper.Map<List<MembershipTypeDbModel>, List<MembershipTypeApiModel>>(membershipTypeDb);
+            var membershipTypeApi = _mapper.Map<List<MembershipTypeDbModel>, List<MembershipTypeApiModel>>(membershipTypeDb);
 
             return Ok(membershipTypeApi);
         }
 
 
         [HttpPost("/api/customers")]
-        public async Task<IActionResult> CreateCustomer([FromBody] CustomerApiModel customerApiModel)
+        public async Task<IActionResult> CreateCustomerAsync([FromBody] CustomerApiModel customerApiModel)
         {
             if (customerApiModel == null)
                 return BadRequest(ModelState);
 
-            var customerDbModel = mapper.Map<CustomerApiModel, CustomerDbModel>(customerApiModel);
+            var customerDbModel = _mapper.Map<CustomerApiModel, CustomerDbModel>(customerApiModel);
 
-            customerRepo.AddCustomer(customerDbModel);
-            await uow.CompleteAsync();
+            _customerRepo.AddCustomer(customerDbModel);
+            await _uow.CompleteAsync();
 
-            var result = mapper.Map<CustomerDbModel, CustomerApiModel>(customerDbModel);
+            var result = _mapper.Map<CustomerDbModel, CustomerApiModel>(customerDbModel);
 
             return Ok(result);
         }
 
         [HttpDelete("/api/customers/{id}")]
-        public async Task<IActionResult> DeleteCustomer(int id)
+        public async Task<IActionResult> DeleteCustomerAsync(int id)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var customerDbModel = await customerRepo.GetCustomers(id, includeRelated: false);
+            var customerDbModel = await _customerRepo.GetCustomers(id, includeRelated: false);
 
             if (customerDbModel == null)
                 return NotFound(id);
 
-            customerRepo.RemoveCustomer(customerDbModel);
-            await uow.CompleteAsync();
+            _customerRepo.RemoveCustomer(customerDbModel);
+            await _uow.CompleteAsync();
 
             return Ok(id);
         }
 
 
         [HttpPut("/api/customers/{id}")]
-        public async Task<IActionResult> UpdateCustomer(int id, [FromBody] CustomerApiModel customerApiModel)
+        public async Task<IActionResult> UpdateCustomerAsync(int id, [FromBody] CustomerApiModel customerApiModel)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var customerDbModel = await customerRepo.GetCustomers(id);
+            var customerDbModel = await _customerRepo.GetCustomers(id);
 
-            mapper.Map<CustomerApiModel, CustomerDbModel>(customerApiModel, customerDbModel);
+            _mapper.Map<CustomerApiModel, CustomerDbModel>(customerApiModel, customerDbModel);
 
-            await uow.CompleteAsync();
+            await _uow.CompleteAsync();
 
-            var result = mapper.Map<CustomerDbModel, CustomerApiModel>(customerDbModel);
+            var result = _mapper.Map<CustomerDbModel, CustomerApiModel>(customerDbModel);
 
             return Ok(result);
         }

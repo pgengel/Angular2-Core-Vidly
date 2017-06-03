@@ -34,6 +34,12 @@ export class CustomerFormComponent implements OnInit {
   submit(){
     console.log(this.subscription);
     this.customerService.createCustomer(this.subscription)
-      .subscribe(c => c.console.log(this.subscription));
+        .subscribe(c =>
+            c.console.log(this.subscription),
+            err => {
+                if (err.status == 400) {
+                    
+                }
+            });
   }
 }

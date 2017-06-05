@@ -35,10 +35,6 @@ export class CustomerFormComponent implements OnInit {
   submit(){
     console.log(this.subscription);
     this.customerService.createCustomer(this.subscription)
-        .subscribe(c =>
-            c.console.log(this.subscription),
-            err => {
-              this.toastyService.error({title: "Error", msg: "Anunexpected error happened", theme: "bootstrap", showClose: true, timeout: 5000})
-            });
+        .subscribe(x => console.log(x));
   }
 }

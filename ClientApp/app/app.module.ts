@@ -4,7 +4,8 @@ import { MembershipTypeService } from './services/membership-type.service';
 import { CustomerService } from './services/customer.service';
 import { MovieService } from './services/movie.service';
 import { RentalService } from './services/rental.service';
-import { NgModule } from '@angular/core';
+import { AppErrorHandler } from './app.error-handler';
+import { NgModule, ErrorHandler } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { UniversalModule } from 'angular2-universal';
 import { AppComponent } from './components/app/app.component'
@@ -17,6 +18,11 @@ import { CustomerListComponent } from './components/customer-list/customer-list.
 import { CustomerFormComponent } from './components/customer-form/customer-form.component';
 import { MovieListComponent } from './components/movie-list/movie-list.component';
 import { RentalFormComponent } from './components/rental-form/rental-form.component';
+import Raven = require('raven-js');
+
+Raven
+    .config('https://ed6e2f75d50c4a55ae87649c3d1ecc34@sentry.io/175674')
+    .install();
 
 @NgModule({
     bootstrap: [ AppComponent ],
@@ -50,6 +56,8 @@ import { RentalFormComponent } from './components/rental-form/rental-form.compon
         ])
     ],
     providers: [
+        //{ provide: ErrorHandler, useClass: RavenErrorHandler },
+        { provide: ErrorHandler, useClass: AppErrorHandler },
         CustomerService,
         MovieService,
         RentalService,

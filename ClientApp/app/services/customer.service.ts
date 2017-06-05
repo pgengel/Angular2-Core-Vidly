@@ -12,6 +12,11 @@ export class CustomerService {
       .map(res => res.json());
   }
 
+  getCustomer(id){
+    return this.http.get('/api/customers/' + id)
+      .map(res => res.json());
+  }
+
   createCustomer(subscription){
     return this.http.post("/api/customers", subscription)
       .map(res => res.json());

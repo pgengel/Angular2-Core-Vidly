@@ -1,3 +1,4 @@
+import {ActivatedRoute, Router} from '@angular/router';
 import {ToastyService} from 'ng2-toasty';
 import { MembershipTypeService } from './../../services/membership-type.service';
 import { CustomerService } from './../../services/customer.service';
@@ -20,9 +21,22 @@ export class CustomerFormComponent implements OnInit {
     // Birthday: ""
   };
 
-  constructor(private membershipTypeService: MembershipTypeService, private customerService: CustomerService, private  toastyService: ToastyService) { }
+  constructor(private membershipTypeService: MembershipTypeService, 
+    private customerService: CustomerService, 
+    private toastyService: ToastyService,
+    private router: Router,
+    private route: ActivatedRoute) { 
+      route.params.subscribe(p => this.subscription.id = +p['id'])
+    }
 
   ngOnInit() {
+    this.customerService.getCustomer(this.subscription.id)
+      .subscribe(c => this.subscription = c,
+         err => {
+          if (err.status == 404)
+            this.router.navigate(['/home']);
+        });
+
     this.membershipTypeService.getMembershipType()
       .subscribe(m => this.membershipType = m);
   }

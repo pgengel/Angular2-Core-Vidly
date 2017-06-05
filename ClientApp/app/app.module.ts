@@ -50,6 +50,7 @@ Raven
             { path: 'account/login', component: AccountLoginComponent },
             { path: 'customers', component: CustomerListComponent },
             { path: 'customers/new', component: CustomerFormComponent },
+            { path: 'customers/:id', component: CustomerFormComponent },
             { path: 'movies', component: MovieListComponent },
             { path: 'rentals/new', component: RentalFormComponent },
             { path: '**', redirectTo: 'home' }

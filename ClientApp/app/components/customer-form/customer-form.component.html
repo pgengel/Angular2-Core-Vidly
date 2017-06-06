@@ -20,8 +20,9 @@
   </div>
   <div class="checkbox">
     <label for="subscribed">
-      <input type="checkbox" id="subscribed" value="false" name="isSubscribed" [(ngModel)]="subscription.isSubscribedToNewsLetter"> Subscribe to Newsletter?
+      <input type="checkbox" id="subscribed" [value]="false" name="isSubscribed" [(ngModel)]="subscription.isSubscribedToNewsLetter"> Subscribe to Newsletter?
     </label>
   </div>
   <button type="submit" class="btn btn-default" [disabled]="!f.valid">Save</button>
+  <button *ngIf="customer.id" class="btn btn-danger" type="button" (click)="deleteCustomer()">Delete</button>
 </form>

@@ -1,8 +1,12 @@
+import * as _ from 'underscore';
 import {ActivatedRoute, Router} from '@angular/router';
 import {ToastyService} from 'ng2-toasty';
 import { MembershipTypeService } from './../../services/membership-type.service';
 import { CustomerService } from './../../services/customer.service';
 import { Component, OnInit } from '@angular/core';
+import 'rxjs/add/Observable/forkJoin';
+import { Observable } from "rxjs/Observable";
+import { SaveSubscription, Subscription } from "../../models/customer";
 
 @Component({
   selector: 'app-customer-form',
@@ -14,10 +18,16 @@ export class CustomerFormComponent implements OnInit {
   private typeOfMembership : any = {};
   private isSubscribed : boolean = false; 
   private customerName : string = "";
-  private subscription : any = {
+  private subscription : SaveSubscription = {
+    id : 0,
     Name : "",
     isSubscribedToNewsLetter: false,
-    MembershipType: {},
+    MembershipType: {
+      payAsYouGo: -1,
+      monthly: -1,
+      quartly: -1,
+      yearly: -1
+    },
     // Birthday: ""
   };
 
@@ -30,25 +40,76 @@ export class CustomerFormComponent implements OnInit {
     }
 
   ngOnInit() {
-    this.customerService.getCustomer(this.subscription.id)
-      .subscribe(c => this.subscription = c,
-         err => {
-          if (err.status == 404)
-            this.router.navigate(['/home']);
-        });
+    var sources = [this.membershipTypeService.getMembershipType()];
 
-    this.membershipTypeService.getMembershipType()
-      .subscribe(m => this.membershipType = m);
+    if(this.subscription.id)
+      sources.push(this.customerService.getCustomer(this.subscription.id));
+
+    Observable.forkJoin(sources).subscribe(data => {
+      this.membershipType = data[0];
+
+      if(this.subscription.id)
+        this.setCustomer(data[1]);
+        this.populateMembershipType();
+    },
+      err =>{
+        if (err.status == 404)
+          this.router.navigate(['/home']);        
+      }
+    );
+
+    // this.customerService.getCustomer(this.subscription.id)
+    //   .subscribe(c => this.subscription = c,
+    //      err => {
+    //       if (err.status == 404)
+    //         this.router.navigate(['/home']);
+    //     });
+
+    // this.membershipTypeService.getMembershipType()
+    //   .subscribe(m => this.membershipType = m);
+  }
+
+  private setCustomer(c : Subscription){
+    this.subscription.id = c.id;  
+    this.subscription.Name = c.name;
+    this.subscription.isSubscribedToNewsLetter = c.isSubscribedToNewsLetter;  
+    this.subscription.MembershipType = c.membershipType;  
   }
   
   onMembershipTypeSelect(){
-   var selectedMembershipType = this.membershipType.find(m => m.id == this.typeOfMembership.id);
-   console.log(selectedMembershipType);
+    this.populateMembershipType();
+  }
+
+  private populateMembershipType(){
+    var selectedMembershipType = this.membershipType.find(m => m.id == this.typeOfMembership.id);
+    console.log(selectedMembershipType);
   }
 
   submit(){
-    console.log(this.subscription);
-    this.customerService.createCustomer(this.subscription)
-        .subscribe(x => console.log(x));
+    if (this.subscription.id) {
+      this.customerService.updateCustomer(this.subscription)
+        .subscribe(x => {
+          this.toastyService.success({
+            title: 'Success',
+            msg: 'The customer has been successfully updated',
+            theme: 'bootstrap',
+            timeout: 5000
+          });
+        });
+    }
+    else{
+      console.log(this.subscription);
+      this.customerService.createCustomer(this.subscription)
+          .subscribe(x => console.log(x));
+    }
+
+  }
+
+  deleteCustomer(id){
+    if (confirm("Are you sure")) {
+      this.customerService.deleteCustomer(id)
+        .subscribe(x => {this.router.navigate(['/home']);
+      })
+    }
   }
 }

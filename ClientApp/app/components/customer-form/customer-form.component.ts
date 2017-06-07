@@ -39,23 +39,22 @@ export class CustomerFormComponent implements OnInit {
       route.params.subscribe(p => this.subscription.id = +p['id']);
   }
   ngOnInit() {
-     if (this.subscription.id) {
-        this.customerService.getCustomer(this.subscription.id)
-            .subscribe(c => {
-                this.setCustomer(c);
-                },
+    if (this.subscription.id) {
+      this.customerService.getCustomer(this.subscription.id)
+        .subscribe(c => {
+          this.setCustomer(c);
+        },
         err => {
-            if (err.status == 404)
-                this.router.navigate(['/home']);
+          if (err.status == 404)
+          this.router.navigate(['/home']);
         });
      }
      
     this.membershipTypeService.getMembershipType()
-         .subscribe(m => this.membershipType = m);
+      .subscribe(m => this.membershipType = m);
   }
   
   private setCustomer(c : Subscription){
-
     this.subscription.Name = c.name;
     this.subscription.isSubscribedToNewsLetter = c.isSubscribedToNewsLetter;  
     this.subscription.MembershipType = c.membershipType;  
@@ -90,13 +89,12 @@ export class CustomerFormComponent implements OnInit {
   }
 
   deleteCustomer() {
-      
-      if (confirm("Are you sure")) {
-          console.log("DELETE ID", this.subscription.id);
-        this.customerService.deleteCustomer(this.subscription.id)
-            .subscribe(x => {
-                this.router.navigate(['/home']);
-            });
-    }
+    if (confirm("Are you sure")) {
+      console.log("DELETE ID", this.subscription.id);
+      this.customerService.deleteCustomer(this.subscription.id)
+        .subscribe(x => {
+          this.router.navigate(['/home']);
+        });
+      }
   }
 }

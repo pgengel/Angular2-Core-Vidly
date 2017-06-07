@@ -29,7 +29,7 @@ export class CustomerService {
   }
 
   deleteCustomer(id){
-    return this.http.delete('/api/customers'+ id)
+    return this.http.delete('/api/customers/'+ id)
       .map(res => res.json());
   }
 }

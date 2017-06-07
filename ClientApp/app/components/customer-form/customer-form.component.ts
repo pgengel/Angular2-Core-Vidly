@@ -51,11 +51,11 @@ export class CustomerFormComponent implements OnInit {
      }
      
     this.membershipTypeService.getMembershipType()
-      .subscribe(m => this.membershipType = m);
+         .subscribe(m => this.membershipType = m);
   }
   
   private setCustomer(c : Subscription){
-    this.subscription.id = c.id;  
+
     this.subscription.Name = c.name;
     this.subscription.isSubscribedToNewsLetter = c.isSubscribedToNewsLetter;  
     this.subscription.MembershipType = c.membershipType;  
@@ -89,9 +89,11 @@ export class CustomerFormComponent implements OnInit {
     }
   }
 
-  deleteCustomer(id){
-    if (confirm("Are you sure")) {
-        this.customerService.deleteCustomer(id)
+  deleteCustomer() {
+      
+      if (confirm("Are you sure")) {
+          console.log("DELETE ID", this.subscription.id);
+        this.customerService.deleteCustomer(this.subscription.id)
             .subscribe(x => {
                 this.router.navigate(['/home']);
             });

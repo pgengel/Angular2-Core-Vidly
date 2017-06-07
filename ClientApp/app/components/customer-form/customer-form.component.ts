@@ -35,17 +35,21 @@ export class CustomerFormComponent implements OnInit {
     private customerService: CustomerService, 
     private toastyService: ToastyService,
     private router: Router,
-    private route: ActivatedRoute) { 
-      route.params.subscribe(p => this.subscription.id = +p['id'])
-    }
+    private route: ActivatedRoute) {
+      route.params.subscribe(p => this.subscription.id = +p['id']);
+  }
   ngOnInit() {
-    // this.customerService.getCustomer(this.subscription.id>0)
-    //   .subscribe(c => this.subscription = c,
-    //      err => {   
-    //       if (err.status == 404)
-    //         this.router.navigate(['/home']);
-    //     });
-
+     if (this.subscription.id) {
+        this.customerService.getCustomer(this.subscription.id)
+            .subscribe(c => {
+                this.setCustomer(c);
+                },
+        err => {
+            if (err.status == 404)
+                this.router.navigate(['/home']);
+        });
+     }
+     
     this.membershipTypeService.getMembershipType()
       .subscribe(m => this.membershipType = m);
   }
@@ -87,9 +91,10 @@ export class CustomerFormComponent implements OnInit {
 
   deleteCustomer(id){
     if (confirm("Are you sure")) {
-      this.customerService.deleteCustomer(id)
-        .subscribe(x => {this.router.navigate(['/home']);
-      })
+        this.customerService.deleteCustomer(id)
+            .subscribe(x => {
+                this.router.navigate(['/home']);
+            });
     }
   }
 }

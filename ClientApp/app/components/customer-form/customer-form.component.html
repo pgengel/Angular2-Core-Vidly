@@ -3,6 +3,7 @@
 <p>typeOfMembership {{ subscription.MembershipType | json }}</p>
 <p>isSubscribed {{ subscription.isSubscribedToNewsLetter | json }}</p>
 <p>customerName {{ subscription.Name | json }}</p>
+<p>id: {{ subscription.id | json }}</p>
 
 <form #f="ngForm" (ngSubmit)="submit()">
   <div class="form-group">

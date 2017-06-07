@@ -38,37 +38,18 @@ export class CustomerFormComponent implements OnInit {
     private route: ActivatedRoute) { 
       route.params.subscribe(p => this.subscription.id = +p['id'])
     }
-
   ngOnInit() {
-    var sources = [this.membershipTypeService.getMembershipType()];
-
-    if(this.subscription.id)
-      sources.push(this.customerService.getCustomer(this.subscription.id));
-
-    Observable.forkJoin(sources).subscribe(data => {
-      this.membershipType = data[0];
-
-      if(this.subscription.id)
-        this.setCustomer(data[1]);
-        this.populateMembershipType();
-    },
-      err =>{
-        if (err.status == 404)
-          this.router.navigate(['/home']);        
-      }
-    );
-
-    // this.customerService.getCustomer(this.subscription.id)
+    // this.customerService.getCustomer(this.subscription.id>0)
     //   .subscribe(c => this.subscription = c,
-    //      err => {
+    //      err => {   
     //       if (err.status == 404)
     //         this.router.navigate(['/home']);
     //     });
 
-    // this.membershipTypeService.getMembershipType()
-    //   .subscribe(m => this.membershipType = m);
+    this.membershipTypeService.getMembershipType()
+      .subscribe(m => this.membershipType = m);
   }
-
+  
   private setCustomer(c : Subscription){
     this.subscription.id = c.id;  
     this.subscription.Name = c.name;
@@ -102,7 +83,6 @@ export class CustomerFormComponent implements OnInit {
       this.customerService.createCustomer(this.subscription)
           .subscribe(x => console.log(x));
     }
-
   }
 
   deleteCustomer(id){

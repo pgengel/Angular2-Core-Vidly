@@ -7,8 +7,8 @@ namespace Vidly.Persistence
 {
     public interface ICustomerRepository
     {
-        Task<List<CustomerDbModel>> GetCustomers();
-        Task<CustomerDbModel> GetCustomers(int id, bool includeRelated = true);
+	    Task<List<CustomerDbModel>> GetCustomersAsync();
+		Task<CustomerDbModel> GetCustomersAsync(int id);
         Task<List<MembershipTypeDbModel>> GetMembershipType();
         void AddCustomer(CustomerDbModel customerDbModel);
         void RemoveCustomer(CustomerDbModel customerDbModel);

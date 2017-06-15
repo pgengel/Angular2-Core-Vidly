@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using Angular2_Core_Vidly.Persistence;
@@ -13,6 +14,8 @@ using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
 using Vidly.Persistence;
 using Angular2_Core_Vidly.Core.ApiModels;
+using Vidly.Core.Factory;
+using Vidly.Persistence.Factory;
 
 namespace WebApplicationBasic
 {
@@ -36,7 +39,8 @@ namespace WebApplicationBasic
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<ICustomerRepository, CustomerRepository>();
             services.AddScoped<IMovieRepository, MovieRepository>();
-            services.AddAutoMapper(); 
+	        services.AddScoped<IDbConnectionFactory, SqlDbConnectionFactory>();
+			services.AddAutoMapper(); 
             services.AddDbContext<VidlyDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("Default"))); //add using Microsoft.EntityFrameworkCore;
             // Add framework services.
             services.AddMvc();

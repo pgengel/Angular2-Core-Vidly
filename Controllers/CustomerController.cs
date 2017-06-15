@@ -30,9 +30,9 @@ namespace Angular2_Core_Vidly.Controllers
         [HttpGet("/api/customers")]
         public async Task<IActionResult> GetCustomersAsync()
         {
-            var customersDb = await _customerRepo.GetCustomers();
+	        var customersDb = await _customerRepo.GetCustomersAsync();
 
-            if (customersDb == null)
+			if (customersDb == null)
                 return NotFound();
 
             var customersApi = _mapper.Map<List<CustomerDbModel>, List<CustomerApiModel>>(customersDb);
@@ -44,7 +44,7 @@ namespace Angular2_Core_Vidly.Controllers
         [HttpGet("/api/customers/{id}")]
         public async Task<IActionResult> GetCustomersAsync(int id)
         {
-            var customersDb = await _customerRepo.GetCustomers(id);
+            var customersDb = await _customerRepo.GetCustomersAsync(id);
 
             if (customersDb == null)
                 return NotFound(id);
@@ -91,7 +91,7 @@ namespace Angular2_Core_Vidly.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var customerDbModel = await _customerRepo.GetCustomers(id, includeRelated: false);
+            var customerDbModel = await _customerRepo.GetCustomersAsync(id);
 
             if (customerDbModel == null)
                 return NotFound(id);
@@ -109,7 +109,7 @@ namespace Angular2_Core_Vidly.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var customerDbModel = await _customerRepo.GetCustomers(id);
+            var customerDbModel = await _customerRepo.GetCustomersAsync(id);
 
             _mapper.Map<CustomerApiModel, CustomerDbModel>(customerApiModel, customerDbModel);
 

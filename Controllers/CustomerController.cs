@@ -77,8 +77,7 @@ namespace Angular2_Core_Vidly.Controllers
 
             var customerDbModel = _mapper.Map<CustomerApiModel, CustomerDbModel>(customerApiModel);
 
-            _customerRepo.AddCustomer(customerDbModel);
-            await _uow.CompleteAsync();
+            await _customerRepo.AddCustomer(customerDbModel);
 
             var result = _mapper.Map<CustomerDbModel, CustomerApiModel>(customerDbModel);
 

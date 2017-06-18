@@ -55,20 +55,6 @@ namespace Angular2_Core_Vidly.Controllers
         }
 
 
-        [HttpGet("/api/customers/membershiptype")]
-        public async Task<IActionResult> GetMembershipTypeAsync()
-        {
-            var membershipTypeDb = await _customerRepo.GetMembershipType();
-
-            if(membershipTypeDb == null)
-                return NotFound();
-
-            var membershipTypeApi = _mapper.Map<List<MembershipTypeDbModel>, List<MembershipTypeApiModel>>(membershipTypeDb);
-
-            return Ok(membershipTypeApi);
-        }
-
-
         [HttpPost("/api/customers")]
         public async Task<IActionResult> CreateCustomerAsync([FromBody] CustomerApiModel customerApiModel)
         {

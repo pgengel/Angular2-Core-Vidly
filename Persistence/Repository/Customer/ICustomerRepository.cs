@@ -9,7 +9,6 @@ namespace Vidly.Persistence
     {
 	    Task<List<CustomerDbModel>> GetCustomersAsync();
 		Task<CustomerDbModel> GetCustomersAsync(int id);
-        Task<List<MembershipTypeDbModel>> GetMembershipType();
         Task AddCustomer(CustomerDbModel customerDbModel);
         Task RemoveCustomer(CustomerDbModel customerDbModel);
     }

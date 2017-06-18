@@ -22,15 +22,12 @@ namespace Vidly.Persistence
 	    internal const string ProcAddCustomer = "dbo.pr_AddCustomer @customerMemebershipTypeId, @customerName, @customerSubscription, @customerBirthday";
 
 		private const string connectionString = "server=DESKTOP-QFSTPSK; database=Vidly; user id=test; password=test";
-		private readonly VidlyDbContext dBContext;
 	    private readonly IDbConnectionFactory _connectionFactory;
 
 	    public CustomerRepository(
-			VidlyDbContext dBContext,
 	        IDbConnectionFactory connectionFactory
 			)
 	    {
-		    this.dBContext = dBContext;
 		    _connectionFactory = connectionFactory;
 	    }
 
@@ -50,11 +47,6 @@ namespace Vidly.Persistence
 				p.Add("@customerId", id);
 				return (await conn.QueryAsync<CustomerDbModel>(ProcGetCustomer, p)).SingleOrDefault();
 	        }
-        }
-
-        public async Task<List<MembershipTypeDbModel>> GetMembershipType()
-        {
-            return await dBContext.MembershipType.ToListAsync();
         }
 
         public async Task AddCustomer(CustomerDbModel customerDbModel)

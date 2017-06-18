@@ -96,8 +96,7 @@ namespace Angular2_Core_Vidly.Controllers
             if (customerDbModel == null)
                 return NotFound(id);
 
-            _customerRepo.RemoveCustomer(customerDbModel);
-            await _uow.CompleteAsync();
+            await _customerRepo.RemoveCustomer(customerDbModel);
 
             return Ok(id);
         }

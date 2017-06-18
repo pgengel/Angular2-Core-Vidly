@@ -18,6 +18,7 @@ namespace Vidly.Persistence
     {
 	    internal const string ProcGetCustomers = "dbo.pr_GetCustomers";
 	    internal const string ProcGetCustomer = "dbo.pr_GetCustomer @customerId";
+	    internal const string ProcDeleteCustomer = "dbo.pr_DeleteCustomer @customerId";
 
 		private const string connectionString = "server=DESKTOP-QFSTPSK; database=Vidly; user id=test; password=test";
 		private readonly VidlyDbContext dBContext;
@@ -60,9 +61,14 @@ namespace Vidly.Persistence
             dBContext.Customer.Add(customerDbModel);
         }
 
-        public void RemoveCustomer(CustomerDbModel customerDbModel)
+        public async Task RemoveCustomer(CustomerDbModel customerDbModel)
         {
-            dBContext.Remove(customerDbModel);
+	        using (var conn = await _connectionFactory.OpenAsync(connectionString))
+	        {
+		        var p = new DynamicParameters();
+				p.Add("@customerId", customerDbModel.Id);
+		        await conn.QueryAsync<int>(ProcDeleteCustomer, p);
+	        }
         }
     }
 }

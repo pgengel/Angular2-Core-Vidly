@@ -20,6 +20,7 @@ namespace Vidly.Persistence
 	    internal const string ProcGetCustomer = "dbo.pr_GetCustomer @customerId";
 	    internal const string ProcDeleteCustomer = "dbo.pr_DeleteCustomer @customerId";
 	    internal const string ProcAddCustomer = "dbo.pr_AddCustomer @customerMemebershipTypeId, @customerName, @customerSubscription, @customerBirthday";
+	    internal const string ProcUpdateCustomer = "dbo.pr_UpdateCustomer @customerId, @customerMemebershipTypeId, @customerSubscribe, @customerName, @customerBirthday";
 
 		private const string connectionString = "server=DESKTOP-QFSTPSK; database=Vidly; user id=test; password=test";
 	    private readonly IDbConnectionFactory _connectionFactory;
@@ -62,7 +63,21 @@ namespace Vidly.Persistence
 	        }
         }
 
-        public async Task RemoveCustomer(CustomerDbModel customerDbModel)
+	    public async Task UpdateCustomer(CustomerDbModel customerDbModel)
+	    {
+		    using (var conn = await _connectionFactory.OpenAsync(connectionString))
+		    {
+			    var p = new DynamicParameters();
+				p.Add("@customerId", customerDbModel.Id);
+			    p.Add("@customerMemebershipTypeId", customerDbModel.MembershipTypeId);
+			    p.Add("@customerSubscribe", customerDbModel.isSubscribedToNewsLetter);
+				p.Add("@customerName", customerDbModel.Name);
+			    p.Add("@customerBirthday", customerDbModel.Birthday);
+			    await conn.QueryAsync<int>(ProcUpdateCustomer, p);
+		    }
+	    }
+
+		public async Task RemoveCustomer(CustomerDbModel customerDbModel)
         {
 	        using (var conn = await _connectionFactory.OpenAsync(connectionString))
 	        {

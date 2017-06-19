@@ -11,5 +11,7 @@ namespace Vidly.Persistence
 		Task<CustomerDbModel> GetCustomersAsync(int id);
         Task AddCustomer(CustomerDbModel customerDbModel);
         Task RemoveCustomer(CustomerDbModel customerDbModel);
+	    Task UpdateCustomer(CustomerDbModel customerDbModel);
+
     }
 }

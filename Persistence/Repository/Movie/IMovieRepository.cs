@@ -6,10 +6,11 @@ namespace Vidly.Persistence
 {
     public interface IMovieRepository
     {
-        Task<List<MovieDbModel>> GetMovies();
-        Task<MovieDbModel> GetMovies(int id, bool includedRelated = true);
-        void AddMovie(MovieDbModel movieDbModel);
-        void RemoveMovie(MovieDbModel movieDbModel);
-        Task<List<GenreDbModel>> GetGenre();
+        Task<List<MovieDbModel>> GetMoviesAsync();
+		Task<MovieDbModel> GetMovieAsync(int id);
+	    Task AddMovieAsync(MovieDbModel movieDbModel);
+	    Task UpdateMovieAsync(MovieDbModel movieDbModel);
+		Task RemoveMovieAsync(MovieDbModel movieDbModel);
+        Task<List<GenreDbModel>> GetGenreAsync();
     }
 }

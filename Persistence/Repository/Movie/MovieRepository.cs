@@ -4,48 +4,95 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Dapper;
 using Vidly.Core.DbModels;
+using Vidly.Core.Factory;
 
 namespace Vidly.Persistence
 {
     public class MovieRepository : IMovieRepository
     {
-        private readonly VidlyDbContext context;
-        public MovieRepository(VidlyDbContext context)
-        {
-            this.context = context;
-        }
-        public async Task<List<MovieDbModel>> GetMovies()
-        {
-            return await this.context.Movie
-                .Include(m => m.Genre)
-                .ToListAsync();
-        }
+	    private const string connectionString = "server=DESKTOP-QFSTPSK; database=Vidly; user id=test; password=test";
 
-        public async Task<List<GenreDbModel>> GetGenre()
-        {
-            return await this.context.Genre.ToListAsync();
-        }
+	    private readonly IDbConnectionFactory _connectionFactory;
+	    internal const string ProcUpdateMovie = "dbo.UpdateMovie @MovieId @DateAdded, @GenreId, @Name, @NumberAvailable, @NumberInStock, @ReleaseDate, @RentalDbModelId";
+	    internal const string ProcAddMovie = "dbo.pr_AddMovie @DateAdded, @GenreId, @Name, @NumberAvailable, @NumberInStock, @ReleaseDate, @RentalDbModelId";
+	    internal const string ProcGetMovies = "dbo.pr_GetMovies";
+	    internal const string ProcDeleteMovie = "dbo.pr_DeleteMovie @MovieId";
+	    internal const string ProcGetGenre = "dbo.pr_GetGenre";
+	    internal const string ProcGetMovie = "dbo.pr_GetMovie @MovieId";
 
-        public async Task<MovieDbModel> GetMovies(int id, bool includedRelated = true)
+	    public MovieRepository(
+		VidlyDbContext context,
+		IDbConnectionFactory connectionFactory)
+	    {
+		    _connectionFactory = connectionFactory;
+	    }
+        public async Task<List<MovieDbModel>> GetMoviesAsync()
         {
-            if(!includedRelated)
-                return await this.context.Movie
-                    .SingleOrDefaultAsync(m => m.GenreId == id);
-
-            return await this.context.Movie
-                .Include(m => m.Genre)
-                .SingleOrDefaultAsync(m => m.GenreId == id);
+	        using (var conn = await _connectionFactory.OpenAsync(connectionString))
+	        {
+		        return (await conn.QueryAsync<MovieDbModel>(ProcGetMovies)).ToList();
+	        }
         }
 
-        public void AddMovie(MovieDbModel movieDbModel)
+        public async Task<List<GenreDbModel>> GetGenreAsync()
         {
-            this.context.Add(movieDbModel);
+	        using (var conn = await _connectionFactory.OpenAsync(connectionString))
+	        {
+		        return (await conn.QueryAsync<GenreDbModel>(ProcGetGenre)).ToList();
+	        }
         }
 
-        public void RemoveMovie(MovieDbModel movieDbModel)
+        public async Task<MovieDbModel> GetMovieAsync(int id)
         {
-            this.context.Remove(movieDbModel);
+	        using (var conn = await _connectionFactory.OpenAsync(connectionString))
+	        {
+		        var p = new DynamicParameters();
+				p.Add("@MovieId", id);
+		        return (await conn.QueryAsync<MovieDbModel>(ProcGetMovie, p)).SingleOrDefault();
+	        }
+        }
+
+        public async Task AddMovieAsync(MovieDbModel movieDbModel)
+        {
+	        using (var conn = await _connectionFactory.OpenAsync(connectionString))
+	        {
+				var p = new DynamicParameters();
+				p.Add("@DateAdded", movieDbModel.DateAdded);
+				p.Add("@GenreId", movieDbModel.GenreId);
+				p.Add("@Name", movieDbModel.Name);
+				p.Add("@NumberAvailable", movieDbModel.NumberAvailable);
+				p.Add("@NumberInStock", movieDbModel.NumberInStock);
+				p.Add("@ReleaseDate", movieDbModel.ReleaseDate);
+		        await conn.QueryAsync<int>(ProcAddMovie, p);
+	        }
+        }
+
+	    public async Task UpdateMovieAsync(MovieDbModel movieDbModel)
+	    {
+		    using (var conn = await _connectionFactory.OpenAsync(connectionString))
+		    {
+			    var p = new DynamicParameters();
+			    p.Add("@MovieId", movieDbModel.Id);
+			    p.Add("@DateAdded", movieDbModel.DateAdded);
+			    p.Add("@GenreId", movieDbModel.GenreId);
+			    p.Add("@Name", movieDbModel.Name);
+			    p.Add("@NumberAvailable", movieDbModel.NumberAvailable);
+			    p.Add("@NumberInStock", movieDbModel.NumberInStock);
+			    p.Add("@ReleaseDate", movieDbModel.ReleaseDate);
+				await conn.QueryAsync(ProcUpdateMovie, p);
+		    }
+	    }
+
+	    public async Task RemoveMovieAsync(MovieDbModel movieDbModel)
+        {
+	        using (var conn = await _connectionFactory.OpenAsync(connectionString))
+	        {
+				var p = new DynamicParameters();
+				p.Add("@MovieId", movieDbModel.Id);
+		        await conn.QueryAsync<int>(ProcDeleteMovie, p);
+	        }
         }
     }
 }

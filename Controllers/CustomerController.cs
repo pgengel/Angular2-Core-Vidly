@@ -63,7 +63,7 @@ namespace Angular2_Core_Vidly.Controllers
 
             var customerDbModel = _mapper.Map<CustomerApiModel, CustomerDbModel>(customerApiModel);
 
-            await _customerRepo.AddCustomer(customerDbModel);
+            await _customerRepo.AddCustomerAsync(customerDbModel);
 
             var result = _mapper.Map<CustomerDbModel, CustomerApiModel>(customerDbModel);
 
@@ -81,7 +81,7 @@ namespace Angular2_Core_Vidly.Controllers
             if (customerDbModel == null)
                 return NotFound(id);
 
-            await _customerRepo.RemoveCustomer(customerDbModel);
+            await _customerRepo.RemoveCustomerAsync(customerDbModel);
 
             return Ok(id);
         }
@@ -97,7 +97,7 @@ namespace Angular2_Core_Vidly.Controllers
 
             _mapper.Map<CustomerApiModel, CustomerDbModel>(customerApiModel, customerDbModel);
 
-			await _customerRepo.UpdateCustomer(customerDbModel);
+			await _customerRepo.UpdateCustomerAsync(customerDbModel);
 
 			var result = _mapper.Map<CustomerDbModel, CustomerApiModel>(customerDbModel);
 

@@ -50,7 +50,7 @@ namespace Vidly.Persistence
 	        }
         }
 
-        public async Task AddCustomer(CustomerDbModel customerDbModel)
+        public async Task AddCustomerAsync(CustomerDbModel customerDbModel)
         {
 	        using (var conn = await _connectionFactory.OpenAsync(connectionString))
 	        {
@@ -63,7 +63,7 @@ namespace Vidly.Persistence
 	        }
         }
 
-	    public async Task UpdateCustomer(CustomerDbModel customerDbModel)
+	    public async Task UpdateCustomerAsync(CustomerDbModel customerDbModel)
 	    {
 		    using (var conn = await _connectionFactory.OpenAsync(connectionString))
 		    {
@@ -77,7 +77,7 @@ namespace Vidly.Persistence
 		    }
 	    }
 
-		public async Task RemoveCustomer(CustomerDbModel customerDbModel)
+		public async Task RemoveCustomerAsync(CustomerDbModel customerDbModel)
         {
 	        using (var conn = await _connectionFactory.OpenAsync(connectionString))
 	        {

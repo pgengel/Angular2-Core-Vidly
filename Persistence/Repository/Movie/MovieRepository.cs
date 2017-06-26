@@ -23,8 +23,7 @@ namespace Vidly.Persistence
 	    internal const string ProcGetMovie = "dbo.pr_GetMovie @MovieId";
 
 	    public MovieRepository(
-		VidlyDbContext context,
-		IDbConnectionFactory connectionFactory)
+			IDbConnectionFactory connectionFactory)
 	    {
 		    _connectionFactory = connectionFactory;
 	    }
